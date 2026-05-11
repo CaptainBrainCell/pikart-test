@@ -1,11 +1,11 @@
 {
   "active": true,
   "image": "Assets/Photos/popup-event.jpg",
-  "imageAlt": "Quiz Night v Piváreň Pikart",
+  "imageAlt": "Quiz Night",
   "title": "Quiz Night",
   "date": "Utorok 20. mája",
   "time": "19:00",
-  "description": "Príďte si zasúťažiť a vyhrať skvelé ceny! Večer plný vedomostí, zábavy a dobrého piva. Vstup voľný, tímy 2–6 ľudí.",
+  "description": "Príďte si zasúťažiť",
   "cta": {
     "text": "Rezervovať stôl",
     "url": "tel:+421917261425"
