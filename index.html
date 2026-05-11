@@ -1477,14 +1477,6 @@ footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40
 })();
 
   /* ===== EVENT POPUP ===== */
-  var NEW_COURSE = {
-    enabled: true,
-    type: "Quiz Night",
-    title: "Quiz Night",
-    date: "Utorok 20. mája · 19:00",
-    description: "Príďte si zasúťažiť a vyhrať skvelé ceny! Večer plný vedomostí, zábavy a dobrého piva. Vstup voľný, tímy 2–6 ľudí."
-  };
-
   (function () {
     var SEEN_KEY = 'pikart_popup_seen';
     var overlay  = document.getElementById('event-popup-overlay');
@@ -1495,20 +1487,36 @@ footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closePopup(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePopup(); });
 
-    if (!NEW_COURSE.enabled) return;
-    if (sessionStorage.getItem(SEEN_KEY) === NEW_COURSE.title) return;
+    fetch('popup.json?v=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.active) return;
+        if (sessionStorage.getItem(SEEN_KEY) === d.title) return;
 
-    document.getElementById('popup-date').textContent  = NEW_COURSE.type || '';
-    document.getElementById('popup-time').textContent  = NEW_COURSE.date || '';
-    document.getElementById('popup-title-text').textContent = NEW_COURSE.title || '';
-    document.getElementById('popup-desc').textContent  = NEW_COURSE.description || '';
-    document.getElementById('popup-img').style.display = 'none';
-    document.getElementById('popup-cta').href = '#rezervacia';
+        var img = document.getElementById('popup-img');
+        if (d.image) {
+          img.src = d.image + '?v=' + Date.now();
+          img.alt = d.imageAlt || d.title;
+          img.style.display = '';
+        } else {
+          img.style.display = 'none';
+        }
 
-    setTimeout(function () {
-      overlay.classList.add('active');
-      sessionStorage.setItem(SEEN_KEY, NEW_COURSE.title);
-    }, 1400);
+        document.getElementById('popup-date').textContent       = d.title || '';
+        document.getElementById('popup-time').textContent       = d.date + (d.time ? ' · ' + d.time : '');
+        document.getElementById('popup-title-text').textContent = d.title || '';
+        document.getElementById('popup-desc').textContent       = d.description || '';
+
+        var cta = document.getElementById('popup-cta');
+        if (d.cta) { cta.textContent = d.cta.text; cta.href = d.cta.url; }
+        else { cta.textContent = 'Rezervovať stôl'; cta.href = '#rezervacia'; }
+
+        setTimeout(function () {
+          overlay.classList.add('active');
+          sessionStorage.setItem(SEEN_KEY, d.title);
+        }, 1400);
+      })
+      .catch(function () {});
   })();
 </script>
 

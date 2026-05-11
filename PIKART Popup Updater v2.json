@@ -1,0 +1,309 @@
+{
+  "name": "PIKART Popup Updater",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000001",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [0, 300],
+      "webhookId": "d450ad8c-c849-4291-9845-47e3f11516cc",
+      "credentials": {
+        "telegramApi": {
+          "id": "Yi7MKfhcKkOKHZbl",
+          "name": "pikart"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: {\n  TELEGRAM_BOT_TOKEN: 'ТВОЙ_TELEGRAM_TOKEN',\n  GITHUB_TOKEN:       'ТВОЙ_GITHUB_TOKEN',\n  GITHUB_OWNER:       'CaptainBrainCell',\n  GITHUB_REPO:        'pikart-test'\n} }];"
+      },
+      "id": "11111111-0000-0000-0000-000000000002",
+      "name": "Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $('Telegram Trigger').item.json.message;\nif (!msg) return [{ json: { ok: 'no', chat_id: 0, error: 'Ziadna sprava.' } }];\n\nconst chatId = msg.chat.id;\nconst caption = msg.caption || '';\n\nif (!msg.photo || msg.photo.length === 0) {\n  return [{ json: {\n    ok: 'no',\n    chat_id: chatId,\n    error: 'Posli FOTKU s titulkom (caption). Priklad:\\n\\nNazov: Quiz Night\\nDatum: Utorok 20. maja\\nCas: 19:00\\nPopis: Pride si zasutazit...\\nCTA text: Rezervovat stol\\nCTA url: tel:+421917261425\\n\\nCTA text a CTA url su nepovinne.'\n  } }];\n}\n\nconst fileId = msg.photo[msg.photo.length - 1].file_id;\n\nfunction get(key) {\n  const m = caption.match(new RegExp('^' + key + '\\\\s*:\\\\s*(.+)$', 'im'));\n  return m ? m[1].trim() : '';\n}\n\nconst title = get('N.zov') || get('Nazov');\nconst date  = get('D.tum') || get('Datum');\nconst time  = get('.as')   || get('Cas');\nconst desc  = get('Popis');\nconst ctaT  = get('CTA text');\nconst ctaU  = get('CTA url');\n\nif (!title || !date || !time || !desc) {\n  const missing = [!title && 'Nazov', !date && 'Datum', !time && 'Cas', !desc && 'Popis'].filter(Boolean).join(', ');\n  return [{ json: {\n    ok: 'no',\n    chat_id: chatId,\n    error: 'Chybaju polia: ' + missing + '.\\nPosli fotku znova s uplnym titulkom.'\n  } }];\n}\n\nconst popup = {\n  active: true,\n  image: 'Assets/Photos/popup-event.jpg',\n  imageAlt: title,\n  title,\n  date,\n  time,\n  description: desc\n};\nif (ctaT) popup.cta = { text: ctaT, url: ctaU || 'tel:+421917261425' };\n\nreturn [{ json: {\n  ok: 'yes',\n  chat_id: chatId,\n  file_id: fileId,\n  popup_json: JSON.stringify(popup, null, 2)\n} }];"
+      },
+      "id": "11111111-0000-0000-0000-000000000003",
+      "name": "Parse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cond-ok",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000004",
+      "name": "IF ok",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.error }}",
+        "additionalFields": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000005",
+      "name": "Send Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [880, 480],
+      "credentials": {
+        "telegramApi": {
+          "id": "Yi7MKfhcKkOKHZbl",
+          "name": "pikart"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.telegram.org/bot' + $('Config').item.json.TELEGRAM_BOT_TOKEN + '/getFile?file_id=' + $json.file_id }}",
+        "options": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000006",
+      "name": "getFile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [880, 140]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.telegram.org/file/bot' + $('Config').item.json.TELEGRAM_BOT_TOKEN + '/' + $json.result.file_path }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "11111111-0000-0000-0000-000000000007",
+      "name": "Download Photo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1100, 140]
+    },
+    {
+      "parameters": {
+        "jsCode": "const token    = $('Config').item.json.TELEGRAM_BOT_TOKEN;\nconst filePath = $('getFile').item.json.result.file_path;\nconst url      = `https://api.telegram.org/file/bot${token}/${filePath}`;\n\nconst buffer = await this.helpers.httpRequest({\n  method: 'GET',\n  url,\n  encoding: null\n});\n\nconst base64 = Buffer.from(buffer, 'binary').toString('base64');\nreturn [{ json: { img_base64: base64 } }];"
+      },
+      "id": "11111111-0000-0000-0000-000000000014",
+      "name": "To Base64",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, 140]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.github.com/repos/' + $('Config').item.json.GITHUB_OWNER + '/' + $('Config').item.json.GITHUB_REPO + '/contents/Assets/Photos/popup-event.jpg' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "={{ 'token ' + $('Config').item.json.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github+json" }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "11111111-0000-0000-0000-000000000008",
+      "name": "SHA Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1540, 140]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.github.com/repos/' + $('Config').item.json.GITHUB_OWNER + '/' + $('Config').item.json.GITHUB_REPO + '/contents/popup.json' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "={{ 'token ' + $('Config').item.json.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github+json" }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "11111111-0000-0000-0000-000000000009",
+      "name": "SHA Popup JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1760, 140]
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed   = $('Parse').item.json;\nconst imgBase64 = $('To Base64').item.json.img_base64;\nconst imgSha   = $('SHA Image').item.json.sha   || null;\nconst popupSha = $('SHA Popup JSON').item.json.sha || null;\n\nif (!imgBase64) throw new Error('img_base64 je prazdne.');\n\nconst imgBody = { message: 'popup: image', content: imgBase64 };\nif (imgSha) imgBody.sha = imgSha;\n\nconst popupB64 = Buffer.from(parsed.popup_json).toString('base64');\nconst popupBody = { message: 'popup: ' + JSON.parse(parsed.popup_json).title, content: popupB64 };\nif (popupSha) popupBody.sha = popupSha;\n\nreturn [{ json: {\n  chat_id:    parsed.chat_id,\n  img_body:   imgBody,\n  popup_body: popupBody\n} }];"
+      },
+      "id": "11111111-0000-0000-0000-000000000010",
+      "name": "Build Bodies",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1980, 140]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ 'https://api.github.com/repos/' + $('Config').item.json.GITHUB_OWNER + '/' + $('Config').item.json.GITHUB_REPO + '/contents/Assets/Photos/popup-event.jpg' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "={{ 'token ' + $('Config').item.json.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "body": "={{ $json.img_body }}",
+        "options": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000011",
+      "name": "Upload Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2200, 140]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ 'https://api.github.com/repos/' + $('Config').item.json.GITHUB_OWNER + '/' + $('Config').item.json.GITHUB_REPO + '/contents/popup.json' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "={{ 'token ' + $('Config').item.json.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "body": "={{ $('Build Bodies').item.json.popup_body }}",
+        "options": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000012",
+      "name": "Upload Popup JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2420, 140]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Build Bodies').item.json.chat_id }}",
+        "text": "Hotovo! Popup aktualizovany a pushnuty na GitHub. Vercel nasadi za par sekund.",
+        "additionalFields": {}
+      },
+      "id": "11111111-0000-0000-0000-000000000013",
+      "name": "Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [2640, 140],
+      "credentials": {
+        "telegramApi": {
+          "id": "Yi7MKfhcKkOKHZbl",
+          "name": "pikart"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [[{ "node": "Config", "type": "main", "index": 0 }]]
+    },
+    "Config": {
+      "main": [[{ "node": "Parse", "type": "main", "index": 0 }]]
+    },
+    "Parse": {
+      "main": [[{ "node": "IF ok", "type": "main", "index": 0 }]]
+    },
+    "IF ok": {
+      "main": [
+        [{ "node": "getFile", "type": "main", "index": 0 }],
+        [{ "node": "Send Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "getFile": {
+      "main": [[{ "node": "To Base64", "type": "main", "index": 0 }]]
+    },
+    "To Base64": {
+      "main": [[{ "node": "SHA Image", "type": "main", "index": 0 }]]
+    },
+    "SHA Image": {
+      "main": [[{ "node": "SHA Popup JSON", "type": "main", "index": 0 }]]
+    },
+    "SHA Popup JSON": {
+      "main": [[{ "node": "Build Bodies", "type": "main", "index": 0 }]]
+    },
+    "Build Bodies": {
+      "main": [[{ "node": "Upload Image", "type": "main", "index": 0 }]]
+    },
+    "Upload Image": {
+      "main": [[{ "node": "Upload Popup JSON", "type": "main", "index": 0 }]]
+    },
+    "Upload Popup JSON": {
+      "main": [[{ "node": "Success", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "simplified-v3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6238ed166cdb50813bd996246aae32dd7233c64010d5d664a6e48082bdc2b8ee"
+  },
+  "id": "pikart-popup-v2",
+  "tags": [
+    {
+      "name": "PIKART",
+      "id": "6TtydhLxTv1XD6YO",
+      "updatedAt": "2026-05-11T15:58:39.486Z",
+      "createdAt": "2026-05-11T15:58:39.486Z"
+    }
+  ]
+}

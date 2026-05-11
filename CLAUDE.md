@@ -22,11 +22,11 @@ npx serve .
 
 ## Architecture
 
-All code lives in `index.html` (~1300 lines):
+All code lives in `index.html` (~1516 lines):
 
-- **Lines 1–755 approx**: Embedded `<style>` block — CSS custom properties (design tokens), layout, animations, responsive breakpoints
-- **Lines 755–1230 approx**: HTML markup — 11 named sections (see below)
-- **Last ~72 lines**: Embedded `<script>` block — vanilla JS for sticky navbar, mobile menu, scroll-reveal, smooth anchoring
+- **Lines 1–911**: Embedded `<style>` block — CSS custom properties (design tokens), layout, animations, responsive breakpoints, popup styles
+- **Lines 913–1401**: HTML markup — 11 named sections + event popup overlay (see below)
+- **Lines 1405–1513**: Embedded `<script>` block — vanilla JS for sticky navbar, mobile menu, scroll-reveal, smooth anchoring, and event popup logic
 
 ### Design Tokens (CSS custom properties on `:root`)
 
@@ -54,6 +54,7 @@ All code lives in `index.html` (~1300 lines):
 | *(no id)* | 5-panel gallery strip with hover zoom |
 | `#recenzie` | 3-card Google reviews grid |
 | `#kontakt` | 3-column footer (contact, hours, social) |
+| `#event-popup-overlay` | Modal popup for current event (shown on page load) |
 
 ### JavaScript (vanilla, no libraries)
 
@@ -61,6 +62,36 @@ All code lives in `index.html` (~1300 lines):
 - **Mobile menu**: hamburger toggle + Escape key closes overlay
 - **Scroll reveal**: `IntersectionObserver` on `.reveal`, `.reveal-d1/.d2/.d3` (staggered delays)
 - **Smooth anchoring**: intercepts `<a href="#...">` clicks, offsets for navbar height
+- **Event popup**: driven by `NEW_COURSE` object (line ~1480); shown 1.4 s after load, once per session (`sessionStorage` key `pikart_popup_seen`); set `enabled: false` to suppress
+
+### Event Popup System
+
+The popup is controlled by the `NEW_COURSE` JS object embedded in `index.html` (line ~1480):
+
+```js
+var NEW_COURSE = {
+  enabled: true,       // set false to hide popup
+  type: "Quiz Night",  // shown in meta line (top label)
+  title: "Quiz Night", // heading + sessionStorage dedup key
+  date: "Utorok 20. mája · 19:00",
+  description: "..."
+};
+```
+
+`popup.json` in the project root mirrors this config in JSON format (reference copy — not loaded at runtime). `popup-draft.json` holds a pending Telegram image `file_id` used during content drafting.
+
+### n8n Automation (`n8n-popup-workflow.json`)
+
+A Telegram-triggered n8n workflow lets the owner update the popup remotely without touching the code:
+
+1. **Telegram Trigger** — listens for a message in the format `Type\nDate\nDescription`
+2. **Spracuj správu** — parses the message into `{type, date, description}`
+3. **Stiahni index.html** — fetches `index.html` from GitHub via REST API
+4. **Priprav nový obsah** — replaces the `NEW_COURSE = { ... }` block via regex
+5. **Aktualizuj index.html** — commits the updated file back to GitHub (`praecantat0r/PIKART`, branch `main`)
+6. **Odosli potvrdenie** — sends a Telegram confirmation with the new content
+
+This workflow targets the `NEW_COURSE` block by regex (`/var NEW_COURSE = \{[\s\S]*?\};/`), so the block must stay as a single `var` declaration without nesting to remain patchable.
 
 ### Assets
 
