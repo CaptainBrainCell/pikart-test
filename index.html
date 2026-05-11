@@ -782,6 +782,132 @@ footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40
   .footer-grid { grid-template-columns: 1fr; gap: 40px; }
   .footer-bottom { flex-direction: column; text-align: center; }
 }
+
+/* ===================================================================
+   EVENT POPUP
+   =================================================================== */
+#event-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.38s ease, visibility 0.38s ease;
+}
+#event-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.popup-card {
+  background: var(--near-black);
+  border: 1px solid rgba(250, 235, 215, 0.11);
+  border-radius: 3px;
+  max-width: 460px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(24px) scale(0.98);
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#event-popup-overlay.active .popup-card {
+  transform: translateY(0) scale(1);
+}
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(13, 13, 13, 0.55);
+  border: 1px solid rgba(250, 235, 215, 0.18);
+  color: var(--cream);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background 0.2s, border-color 0.2s;
+}
+.popup-close:hover {
+  background: rgba(250, 235, 215, 0.14);
+  border-color: rgba(250, 235, 215, 0.38);
+}
+.popup-image-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--charcoal);
+}
+.popup-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.popup-body {
+  padding: 1.4rem 1.6rem 1.7rem;
+}
+.popup-meta {
+  display: flex;
+  gap: 1.1rem;
+  margin-bottom: 0.6rem;
+  align-items: center;
+}
+.popup-meta span {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(250, 235, 215, 0.48);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.popup-meta .popup-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(250, 235, 215, 0.25);
+}
+.popup-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, 2.6rem);
+  color: var(--cream);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.85rem;
+}
+.popup-description {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: rgba(250, 235, 215, 0.65);
+  line-height: 1.68;
+  margin-bottom: 1.3rem;
+}
+.popup-cta {
+  display: inline-block;
+  background: var(--cream);
+  color: var(--near-black);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.62rem 1.35rem;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.popup-cta:hover { opacity: 0.82; }
+@media (max-width: 480px) {
+  .popup-body { padding: 1.1rem 1.1rem 1.4rem; }
+}
 </style>
 </head>
 <body>
@@ -1252,6 +1378,28 @@ footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40
 
 
 <!-- ===================================================================
+     EVENT POPUP
+     =================================================================== -->
+<div id="event-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title-text">
+  <div class="popup-card">
+    <button class="popup-close" id="popup-close-btn" aria-label="Zatvoriť">✕</button>
+    <div class="popup-image-wrap">
+      <img id="popup-img" src="" alt="" loading="lazy" />
+    </div>
+    <div class="popup-body">
+      <div class="popup-meta">
+        <span id="popup-date"></span>
+        <div class="popup-sep" id="popup-sep" aria-hidden="true"></div>
+        <span id="popup-time"></span>
+      </div>
+      <h2 class="popup-title" id="popup-title-text"></h2>
+      <p class="popup-description" id="popup-desc"></p>
+      <a class="popup-cta" id="popup-cta" href="#rezervacia">Rezervovať stôl</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================
      JAVASCRIPT
      =================================================================== -->
 <script>
@@ -1327,6 +1475,41 @@ footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40
   });
 
 })();
+
+  /* ===== EVENT POPUP ===== */
+  var NEW_COURSE = {
+    enabled: false,
+    type: "",
+    title: "",
+    date: "",
+    description: ""
+  };
+
+  (function () {
+    var SEEN_KEY = 'pikart_popup_seen';
+    var overlay  = document.getElementById('event-popup-overlay');
+    var closeBtn = document.getElementById('popup-close-btn');
+
+    function closePopup() { overlay.classList.remove('active'); }
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closePopup(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePopup(); });
+
+    if (!NEW_COURSE.enabled) return;
+    if (sessionStorage.getItem(SEEN_KEY) === NEW_COURSE.title) return;
+
+    document.getElementById('popup-date').textContent  = NEW_COURSE.type || '';
+    document.getElementById('popup-time').textContent  = NEW_COURSE.date || '';
+    document.getElementById('popup-title-text').textContent = NEW_COURSE.title || '';
+    document.getElementById('popup-desc').textContent  = NEW_COURSE.description || '';
+    document.getElementById('popup-img').style.display = 'none';
+    document.getElementById('popup-cta').href = '#rezervacia';
+
+    setTimeout(function () {
+      overlay.classList.add('active');
+      sessionStorage.setItem(SEEN_KEY, NEW_COURSE.title);
+    }, 1400);
+  })();
 </script>
 
 </body>
