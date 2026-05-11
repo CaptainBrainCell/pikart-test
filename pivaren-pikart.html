@@ -1,0 +1,1450 @@
+
+<!doctype html>
+<html lang="sk" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Piváreň Pikart – piváreň s výbornými pivkami a kuchyňou v Banskej Bystrici, Sásová. Burgery, hot dogy, točené pivo, limonády, quiz night a živá hudba.">
+<title>Piváreň Pikart | Banská Bystrica – Sásová</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Bebas+Neue&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES — COLOR PALETTE & TYPOGRAPHY
+   ============================================================ */
+:root {
+  /* Colors */
+  --bg:         #0D0A0B;
+  --bg-section: #110E0F;
+  --surface:    #1A1518;
+  --surface-2:  #221D20;
+  --accent:     #F5A623;
+  --accent-dim: rgba(245, 166, 35, 0.15);
+  --accent-glow:rgba(245, 166, 35, 0.35);
+  --violet:     #7B2FBE;
+  --violet-dim: rgba(123, 47, 190, 0.18);
+  --violet-glow:rgba(123, 47, 190, 0.4);
+  --teal:       #00D4AA;
+  --teal-dim:   rgba(0, 212, 170, 0.15);
+  --fg:         #F5F0E8;
+  --muted:      #A89F8C;
+  --border:     rgba(245, 166, 35, 0.2);
+  --border-dim: rgba(245, 240, 232, 0.08);
+
+  /* Typography */
+  --font-display:  'Playfair Display', Georgia, serif;
+  --font-heading:  'Bebas Neue', Impact, sans-serif;
+  --font-body:     'Lora', Georgia, serif;
+  --font-accent:   'Caveat', cursive;
+
+  /* Spacing */
+  --section-pad: clamp(60px, 8vw, 120px);
+  --container:   1180px;
+  --radius:      12px;
+  --radius-sm:   6px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+::selection { background: var(--accent); color: var(--bg); }
+
+/* Utility */
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 60px);
+}
+
+.section-eyebrow {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.section-lead {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.75;
+}
+
+/* Scroll-triggered animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* CTA Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 32px var(--accent-glow), 0 8px 24px rgba(0,0,0,0.4);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--fg);
+  border: 2px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   1. NAVIGATION
+   ============================================================ */
+#navbar {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 1000;
+  padding: 20px 0;
+  transition: background 0.35s ease, backdrop-filter 0.35s ease, padding 0.35s ease, box-shadow 0.35s ease;
+}
+#navbar.scrolled {
+  background: rgba(13, 10, 11, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 12px 0;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.6);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.nav-logo-badge {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+.nav-logo-text {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  color: var(--fg);
+}
+.nav-logo-text span {
+  display: block;
+  font-family: var(--font-accent);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  transition: color 0.2s;
+  text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-cta { flex-shrink: 0; }
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 6px;
+}
+.hamburger span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: var(--fg);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile nav */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(13, 10, 11, 0.97);
+  backdrop-filter: blur(20px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 40px 24px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+  transition: color 0.2s;
+}
+.mobile-nav a:hover { color: var(--accent); }
+.mobile-nav .btn { margin-top: 16px; }
+
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .hamburger { display: flex; }
+}
+
+/* ============================================================
+   2. HERO
+   ============================================================ */
+#hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 40%, rgba(245, 166, 35, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(123, 47, 190, 0.1) 0%, transparent 60%),
+    linear-gradient(160deg, #1a1210 0%, #0D0A0B 40%, #0a0810 100%);
+}
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  pointer-events: none;
+}
+.bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(245,166,35,0.35), rgba(245,166,35,0.05));
+  border: 1px solid rgba(245,166,35,0.25);
+  animation: rise linear infinite;
+}
+@keyframes rise {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-110vh) translateX(30px); opacity: 0; }
+}
+.bubble:nth-child(1)  { left:8%;   width:10px; height:10px; animation-duration:9s;  animation-delay:0s;   }
+.bubble:nth-child(2)  { left:18%;  width:6px;  height:6px;  animation-duration:12s; animation-delay:1.5s; }
+.bubble:nth-child(3)  { left:28%;  width:14px; height:14px; animation-duration:10s; animation-delay:3s;   }
+.bubble:nth-child(4)  { left:42%;  width:8px;  height:8px;  animation-duration:14s; animation-delay:0.7s; }
+.bubble:nth-child(5)  { left:55%;  width:5px;  height:5px;  animation-duration:11s; animation-delay:2.2s; }
+.bubble:nth-child(6)  { left:65%;  width:12px; height:12px; animation-duration:8s;  animation-delay:4s;   }
+.bubble:nth-child(7)  { left:75%;  width:7px;  height:7px;  animation-duration:13s; animation-delay:1s;   }
+.bubble:nth-child(8)  { left:85%;  width:9px;  height:9px;  animation-duration:10s; animation-delay:5s;   }
+.bubble:nth-child(9)  { left:92%;  width:4px;  height:4px;  animation-duration:15s; animation-delay:2.8s; }
+.bubble:nth-child(10) { left:35%;  width:11px; height:11px; animation-duration:9.5s;animation-delay:6s;   }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-top: 100px;
+  padding-bottom: 80px;
+}
+.hero-label {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-label::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 900;
+  line-height: 1.1;
+  max-width: 780px;
+  margin-bottom: 24px;
+}
+.hero-headline em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-tagline {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--muted);
+  max-width: 520px;
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: bounce 2.2s ease-in-out infinite;
+}
+.scroll-indicator svg { color: var(--accent); }
+@keyframes bounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ============================================================
+   3. O NÁS
+   ============================================================ */
+#o-nas {
+  background: var(--bg-section);
+  padding: var(--section-pad) 0;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+.about-text .section-title { max-width: 500px; }
+.about-text p { color: var(--muted); margin-bottom: 20px; }
+.about-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 36px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border-dim);
+}
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+.stat-label {
+  font-family: var(--font-accent);
+  font-size: 14px;
+  color: var(--muted);
+}
+.img-placeholder {
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  box-shadow: 0 0 40px rgba(245,166,35,0.08), inset 0 0 60px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.07) 0%, transparent 70%);
+}
+.img-placeholder-icon { font-size: 48px; opacity: 0.5; }
+.img-placeholder-label {
+  font-family: var(--font-accent);
+  font-size: 18px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.pull-quotes { margin-top: 40px; display: flex; flex-direction: column; gap: 20px; }
+.pull-quote {
+  border-inline-start: 3px solid var(--accent);
+  padding: 16px 20px;
+  background: var(--accent-dim);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.pull-quote p {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--fg) !important;
+  margin: 0 !important;
+  line-height: 1.6;
+}
+.pull-quote cite {
+  display: block;
+  margin-top: 8px;
+  font-style: normal;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   4. MENU
+   ============================================================ */
+#menu {
+  background: var(--bg);
+  padding: var(--section-pad) 0;
+}
+.menu-header { text-align: center; margin-bottom: 48px; }
+.menu-header .section-lead { margin-inline: auto; }
+.tab-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border-dim);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+.tab-btn:not(.active):hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+.menu-card {
+  background: rgba(26, 21, 24, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.menu-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -20%, rgba(245,166,35,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.menu-card:hover {
+  border-color: rgba(245,166,35,0.4);
+  box-shadow: 0 0 28px rgba(245,166,35,0.12);
+  transform: translateY(-3px);
+}
+.menu-card-icon { font-size: 32px; margin-bottom: 14px; }
+.menu-card-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+.menu-card-desc { font-family: var(--font-body); font-size: 14px; color: var(--muted); line-height: 1.6; }
+.lemon-card { position: relative; overflow: hidden; }
+.lemon-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-family: var(--font-accent);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(245,166,35,0.3);
+}
+.lemon-name { font-family: var(--font-heading); font-size: 26px; letter-spacing: 0.05em; margin-bottom: 8px; }
+.lemon-desc { font-size: 14px; color: var(--muted); }
+.lemon-green  { border-color: rgba(130, 200, 90, 0.35); }
+.lemon-green .lemon-name { color: #82c85a; }
+.lemon-green::before  { background: radial-gradient(ellipse at 50% -20%, rgba(130,200,90,0.06) 0%, transparent 65%) !important; }
+.lemon-pink   { border-color: rgba(255, 120, 150, 0.35); }
+.lemon-pink .lemon-name { color: #ff7896; }
+.lemon-pink::before   { background: radial-gradient(ellipse at 50% -20%, rgba(255,120,150,0.06) 0%, transparent 65%) !important; }
+.lemon-orange { border-color: rgba(255, 160, 50, 0.35); }
+.lemon-orange .lemon-name { color: #ffa032; }
+.lemon-orange::before { background: radial-gradient(ellipse at 50% -20%, rgba(255,160,50,0.06) 0%, transparent 65%) !important; }
+.lemon-teal   { border-color: rgba(0, 212, 170, 0.35); }
+.lemon-teal .lemon-name { color: var(--teal); }
+.lemon-teal::before   { background: radial-gradient(ellipse at 50% -20%, rgba(0,212,170,0.06) 0%, transparent 65%) !important; }
+.lemon-violet { border-color: rgba(123, 47, 190, 0.45); }
+.lemon-violet .lemon-name { color: #b97fef; }
+.lemon-violet::before { background: radial-gradient(ellipse at 50% -20%, rgba(123,47,190,0.1) 0%, transparent 65%) !important; }
+.drinks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+
+/* ============================================================
+   5. UDALOSTI
+   ============================================================ */
+#udalosti {
+  background: var(--surface);
+  padding: var(--section-pad) 0;
+}
+.events-header { margin-bottom: 48px; }
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.event-card {
+  background: rgba(13, 10, 11, 0.7);
+  border: 1px solid rgba(123, 47, 190, 0.25);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.event-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -20%, rgba(123,47,190,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+.event-card:hover {
+  border-color: rgba(123,47,190,0.6);
+  box-shadow: 0 0 32px var(--violet-glow);
+  transform: translateY(-3px);
+}
+.event-icon { font-size: 40px; margin-bottom: 18px; display: block; }
+.event-title { font-family: var(--font-heading); font-size: 24px; letter-spacing: 0.06em; color: var(--fg); margin-bottom: 6px; }
+.event-when { font-family: var(--font-accent); font-size: 14px; color: var(--violet); margin-bottom: 12px; display: block; font-weight: 600; }
+.event-detail { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.event-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+  transition: gap 0.2s;
+}
+.event-cta:hover { gap: 10px; }
+
+/* ============================================================
+   6. GALÉRIA
+   ============================================================ */
+#galeria {
+  background: var(--bg);
+  padding: var(--section-pad) 0;
+}
+.gallery-header { text-align: center; margin-bottom: 48px; }
+.gallery-grid { columns: 4 220px; gap: 16px; }
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border-dim);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  cursor: pointer;
+}
+.gallery-item:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(245,166,35,0.18);
+  transform: scale(1.02);
+}
+.gallery-placeholder {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.gallery-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(245,166,35,0.05) 0%, transparent 70%);
+}
+.gallery-ph-icon { font-size: 36px; opacity: 0.6; }
+.gallery-ph-label { font-family: var(--font-accent); font-size: 14px; color: var(--muted); }
+.gallery-item:nth-child(1) .gallery-placeholder  { min-height: 220px; }
+.gallery-item:nth-child(2) .gallery-placeholder  { min-height: 280px; }
+.gallery-item:nth-child(3) .gallery-placeholder  { min-height: 200px; }
+.gallery-item:nth-child(4) .gallery-placeholder  { min-height: 260px; }
+.gallery-item:nth-child(5) .gallery-placeholder  { min-height: 300px; }
+.gallery-item:nth-child(6) .gallery-placeholder  { min-height: 180px; }
+.gallery-item:nth-child(7) .gallery-placeholder  { min-height: 240px; }
+.gallery-item:nth-child(8) .gallery-placeholder  { min-height: 210px; }
+.gallery-item:nth-child(9) .gallery-placeholder  { min-height: 270px; }
+.gallery-item:nth-child(10).gallery-placeholder  { min-height: 230px; }
+.gallery-footer { text-align: center; margin-top: 40px; }
+.gallery-footer p { color: var(--muted); font-family: var(--font-accent); font-size: 16px; margin-bottom: 20px; }
+
+/* ============================================================
+   7. RECENZIE
+   ============================================================ */
+#recenzie {
+  background: var(--bg-section);
+  padding: var(--section-pad) 0;
+}
+.reviews-header { text-align: center; margin-bottom: 48px; }
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.review-card {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.review-card:hover { border-color: rgba(245,166,35,0.3); transform: translateY(-2px); }
+.review-stars { font-size: 18px; color: var(--accent); letter-spacing: 2px; }
+.review-text { font-family: var(--font-body); font-style: italic; font-size: 15px; color: var(--fg); line-height: 1.7; flex: 1; }
+.review-author { font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+.review-source { display: flex; align-items: center; gap: 8px; }
+.review-source-badge {
+  background: var(--accent-dim);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: 50px;
+  padding: 3px 10px;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+@media (max-width: 900px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .reviews-grid::-webkit-scrollbar { display: none; }
+  .review-card { min-width: 280px; flex-shrink: 0; }
+}
+
+/* ============================================================
+   8. KONTAKT
+   ============================================================ */
+#kontakt {
+  background: var(--bg);
+  padding: var(--section-pad) 0;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.contact-info .section-title { margin-bottom: 32px; }
+.contact-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+.contact-item-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.contact-item-label { font-family: var(--font-heading); font-size: 11px; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+.contact-item-value { font-size: 16px; color: var(--fg); }
+.contact-item-value a { color: var(--fg); transition: color 0.2s; }
+.contact-item-value a:hover { color: var(--accent); text-decoration: underline; }
+.hours-table { width: 100%; border-collapse: collapse; margin-top: 32px; margin-bottom: 32px; }
+.hours-table tr { border-bottom: 1px solid var(--border-dim); }
+.hours-table tr:last-child { border-bottom: none; }
+.hours-table td { padding: 12px 0; font-size: 15px; }
+.hours-table td:first-child { color: var(--muted); font-family: var(--font-body); }
+.hours-table td:last-child  { color: var(--fg); text-align: end; font-family: var(--font-heading); letter-spacing: 0.08em; font-size: 16px; }
+.hours-closed { color: var(--muted) !important; }
+.contact-map-wrap {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 32px rgba(245,166,35,0.1);
+  aspect-ratio: 4/3;
+}
+.contact-map-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  filter: grayscale(0.4) brightness(0.85);
+}
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   9. FOOTER
+   ============================================================ */
+footer {
+  background: var(--surface);
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--border-dim);
+}
+.footer-inner { display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; }
+.footer-logo { display: flex; align-items: center; gap: 12px; }
+.footer-links { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+.footer-links a { font-family: var(--font-heading); font-size: 13px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; transition: color 0.2s; }
+.footer-links a:hover { color: var(--accent); }
+.footer-social { display: flex; gap: 16px; }
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 18px;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.footer-social a:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+.footer-copy { font-family: var(--font-body); font-size: 13px; color: var(--muted); line-height: 1.6; }
+.footer-copy a { color: var(--accent); }
+.footer-heart { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav id="navbar" role="navigation" aria-label="Hlavná navigácia">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo" aria-label="Piváreň Pikart – domovská stránka">
+      <svg class="nav-logo-badge" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="48" cy="48" r="46" fill="#1A1518" stroke="#F5A623" stroke-width="2"/>
+        <rect x="30" y="34" width="28" height="32" rx="3" fill="none" stroke="#F5A623" stroke-width="2.2"/>
+        <path d="M58 40 Q70 40 70 50 Q70 60 58 60" fill="none" stroke="#F5A623" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M30 34 Q36 28 42 33 Q48 28 58 34" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="50" r="2" fill="#F5A623" opacity="0.5"/>
+        <circle cx="44" cy="44" r="1.5" fill="#F5A623" opacity="0.4"/>
+        <circle cx="50" cy="52" r="1.5" fill="#F5A623" opacity="0.5"/>
+        <text font-family="'Bebas Neue', sans-serif" font-size="9" fill="#F5A623" letter-spacing="3">
+          <textPath href="#circle-path" startOffset="8%">PIVÁREŇ PIKART 2022</textPath>
+        </text>
+        <defs>
+          <path id="circle-path" d="M 48,8 A 40,40 0 1,1 47.99,8"/>
+        </defs>
+      </svg>
+      <div class="nav-logo-text">
+        Piváreň Pikart
+        <span>Sásová, Banská Bystrica</span>
+      </div>
+    </a>
+
+    <ul class="nav-links" role="list">
+      <li><a href="#o-nas">O nás</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#udalosti">Udalosti</a></li>
+      <li><a href="#galeria">Galéria</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+
+    <a href="tel:+421917261425" class="btn btn-primary nav-cta" aria-label="Rezervovať stôl – zavolajte na 0917 261 425">
+      📞 Rezervovať stôl
+    </a>
+
+    <button class="hamburger" id="hamburger-btn" aria-label="Otvoriť menu" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<nav class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobilná navigácia" aria-hidden="true">
+  <a href="#o-nas" class="mobile-link">O nás</a>
+  <a href="#menu" class="mobile-link">Menu</a>
+  <a href="#udalosti" class="mobile-link">Udalosti</a>
+  <a href="#galeria" class="mobile-link">Galéria</a>
+  <a href="#kontakt" class="mobile-link">Kontakt</a>
+  <a href="tel:+421917261425" class="btn btn-primary">📞 Rezervovať stôl</a>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero" aria-label="Úvod">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="bubbles" aria-hidden="true">
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <div class="container hero-content">
+    <div class="hero-label" aria-hidden="true">Piváreň Pikart — od roku 2022</div>
+    <h1 class="hero-headline">
+      Váš obľúbený<br>
+      podnik <em>v srdci</em><br>
+      Sásovej
+    </h1>
+    <p class="hero-tagline">
+      Piváreň s výbornými pivkami, kde si určite nájdete svoje obľúbené aj vy.
+    </p>
+    <div class="hero-ctas">
+      <a href="tel:+421917261425" class="btn btn-primary">📞 Rezervovať stôl</a>
+      <a href="#menu" class="btn btn-outline">Pozrieť menu ↓</a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 3v14M4 13l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Scroll</span>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     O NÁS
+     ============================================================ -->
+<section id="o-nas" aria-labelledby="about-heading">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <span class="section-eyebrow reveal">Náš príbeh</span>
+        <h2 class="section-title reveal reveal-delay-1" id="about-heading">Miesto, kde sa<br>dobre cítiš</h2>
+        <p class="reveal reveal-delay-2">
+          Piváreň Pikart otvorila svoje dvere v roku 2022 v srdci sídliska Sásová v Banskej Bystrici.
+          Vytvorili sme miesto, kde sa dá pohodlne posedieť, dobre najesť a vybrať si z výborných piviek.
+        </p>
+        <p class="reveal reveal-delay-2" style="color: var(--muted);">
+          Náš interiér kombinuje rustikálne drevo a kameň s priateľskou atmosférou – a vonku na terase
+          ťa čaká čerstvý vzduch, živá hudba a dobrá nálada. Príď nás navštíviť a presvedč sa sám.
+        </p>
+        <div class="about-stats reveal reveal-delay-3">
+          <div class="stat-item">
+            <span class="stat-value">2022</span>
+            <span class="stat-label">Rok otvorenia</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">Sásová, BB</span>
+            <span class="stat-label">Srdce sídliska</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">6 dní</span>
+            <span class="stat-label">v týždni</span>
+          </div>
+        </div>
+        <div class="pull-quotes reveal reveal-delay-4">
+          <blockquote class="pull-quote">
+            <p>„Fantastická piváreň. Pivo, jedlo, obsluha na parádu. Vrelo odporúčam."</p>
+            <cite>— Google recenzia ★★★★★</cite>
+          </blockquote>
+          <blockquote class="pull-quote">
+            <p>„Krásne prerobená stará krčma na piváreň na úrovni. Obsluha milá a ochotná."</p>
+            <cite>— Google recenzia ★★★★★</cite>
+          </blockquote>
+        </div>
+      </div>
+
+      <div class="about-image reveal reveal-delay-2">
+        <div class="img-placeholder" role="img" aria-label="Interiér pivárne Pikart">
+          <span class="img-placeholder-icon" aria-hidden="true">🍺</span>
+          <span class="img-placeholder-label">Interiér pivárne</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     MENU
+     ============================================================ -->
+<section id="menu" aria-labelledby="menu-heading">
+  <div class="container">
+    <div class="menu-header">
+      <span class="section-eyebrow reveal">Čo u nás nájdeš</span>
+      <h2 class="section-title reveal reveal-delay-1" id="menu-heading">Naše menu</h2>
+      <p class="section-lead reveal reveal-delay-2">Čerstvé suroviny, domáce recepty a výber pív, ktorý poteší každého gurmána.</p>
+    </div>
+
+    <div class="tab-nav reveal" role="tablist" aria-label="Kategórie menu">
+      <button class="tab-btn active" role="tab" aria-selected="true"  aria-controls="tab-jedlo"    data-tab="jedlo">🍔 Jedlo</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" aria-controls="tab-pivo"     data-tab="pivo">🍺 Pivo &amp; Drinky</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" aria-controls="tab-limonady" data-tab="limonady">🍋 Limonády</button>
+    </div>
+
+    <!-- JEDLO -->
+    <div class="tab-panel active" id="tab-jedlo" role="tabpanel" aria-label="Jedlo">
+      <div class="menu-grid">
+        <div class="menu-card reveal">
+          <div class="menu-card-icon" aria-hidden="true">🍔</div>
+          <div class="menu-card-name">Burgery</div>
+          <p class="menu-card-desc">Šťavnaté mäso, čerstvé ingrediencie, prémiové žemle. Každý burger je malé majstrovské dielo.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-1">
+          <div class="menu-card-icon" aria-hidden="true">🌭</div>
+          <div class="menu-card-name">Hot Dog</div>
+          <p class="menu-card-desc">S ťahaným mäsom — žiadny obyčajný hot dog. Toto je zážitok, ktorý zapamätáš.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-2">
+          <div class="menu-card-icon" aria-hidden="true">🍗</div>
+          <div class="menu-card-name">Kuracie krídla</div>
+          <p class="menu-card-desc">Chrumkavé, správne dochutené. K pivu ako stvorené — ideálny spoločník na dlhý večer.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-3">
+          <div class="menu-card-icon" aria-hidden="true">🧅</div>
+          <div class="menu-card-name">Cibuľové krúžky</div>
+          <p class="menu-card-desc">Zlatisté, chrumkavé, neodolateľné. Klasika, ktorá nikdy nezklame.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-1">
+          <div class="menu-card-icon" aria-hidden="true">🍟</div>
+          <div class="menu-card-name">Hranolčeky</div>
+          <p class="menu-card-desc">Klasické alebo sladké batátové — vždy chrumkavé, vždy čerstvé.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-2">
+          <div class="menu-card-icon" aria-hidden="true">🍲</div>
+          <div class="menu-card-name">Kotlíkový guláš</div>
+          <p class="menu-card-desc">Špeciálna udalostná pochúťka. Pýtaj sa na aktuálnu dostupnosť — nestáva sa každý deň.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIVO & DRINKY -->
+    <div class="tab-panel" id="tab-pivo" role="tabpanel" aria-label="Pivo a drinky">
+      <div class="drinks-grid">
+        <div class="menu-card reveal">
+          <div class="menu-card-icon" aria-hidden="true">🍺</div>
+          <div class="menu-card-name">Točené pivo</div>
+          <p class="menu-card-desc">Staropramen a ďalšie čapované pivárenské špeciality. Správna teplota, správna pena — vždy.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-1">
+          <div class="menu-card-icon" aria-hidden="true">🥃</div>
+          <div class="menu-card-name">Whisky &amp; Spirits</div>
+          <p class="menu-card-desc">Jameson a bohatý výber prémiových liehovín pre tých, čo si vedia vychutnať kvapku kvalitného.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-2">
+          <div class="menu-card-icon" aria-hidden="true">🍹</div>
+          <div class="menu-card-name">Koktaily</div>
+          <p class="menu-card-desc">Sezónne mixy tvorené s chuťou. Každé obdobie prináša nové kombinácie.</p>
+        </div>
+        <div class="menu-card reveal reveal-delay-3">
+          <div class="menu-card-icon" aria-hidden="true">☕</div>
+          <div class="menu-card-name">Káva</div>
+          <p class="menu-card-desc">Teplé nápoje pre každú dennú dobu. Ranný espresso aj poobedná latte — čerstvo nachystaná.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIMONÁDY -->
+    <div class="tab-panel" id="tab-limonady" role="tabpanel" aria-label="Limonády">
+      <div class="menu-grid">
+        <div class="menu-card lemon-card lemon-green reveal">
+          <span class="lemon-badge">Ručne robená</span>
+          <div class="menu-card-icon" aria-hidden="true">🌿</div>
+          <div class="lemon-name">Baza-Mäta</div>
+          <p class="lemon-desc">Kvetinová baza a osviežujúca mäta — letná sviežosť v každom dúšku.</p>
+        </div>
+        <div class="menu-card lemon-card lemon-pink reveal reveal-delay-1">
+          <span class="lemon-badge">Ručne robená</span>
+          <div class="menu-card-icon" aria-hidden="true">🍓</div>
+          <div class="lemon-name">Jahoda-Mäta</div>
+          <p class="lemon-desc">Sladká jahoda s chladivou mätou. Obľúbená voľba na teplé letné dni.</p>
+        </div>
+        <div class="menu-card lemon-card lemon-orange reveal reveal-delay-2">
+          <span class="lemon-badge">Ručne robená</span>
+          <div class="menu-card-icon" aria-hidden="true">🍊</div>
+          <div class="lemon-name">Pomaranč-Grenadína</div>
+          <p class="lemon-desc">Svieži pomaranč s romantickým odtieňom grenadíny. Krásny pohľad aj chuť.</p>
+        </div>
+        <div class="menu-card lemon-card lemon-teal reveal reveal-delay-3">
+          <span class="lemon-badge">Ručne robená</span>
+          <div class="menu-card-icon" aria-hidden="true">🥒</div>
+          <div class="lemon-name">Uhorka-Mäta</div>
+          <p class="lemon-desc">Prekvapivo osviežujúca kombinácia. Chladivá uhorka a mäta — dokonalé duo.</p>
+        </div>
+        <div class="menu-card lemon-card lemon-violet reveal reveal-delay-1">
+          <span class="lemon-badge">Ručne robená</span>
+          <div class="menu-card-icon" aria-hidden="true">💜</div>
+          <div class="lemon-name">Levanduľa-Čučoriedka</div>
+          <p class="lemon-desc">Elegantná levanduľa a sladká čučoriedka. Jemná, záhadná, nezabudnuteľná.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     UDALOSTI
+     ============================================================ -->
+<section id="udalosti" aria-labelledby="events-heading">
+  <div class="container">
+    <div class="events-header">
+      <span class="section-eyebrow reveal">Čo sa deje u nás</span>
+      <h2 class="section-title reveal reveal-delay-1" id="events-heading">Čo sa deje v Pikarte</h2>
+      <p class="section-lead reveal reveal-delay-2">Nikdy tu nie je nuda. Kvízy, živá hudba, šport a hry — vždy je čo zažiť.</p>
+    </div>
+    <div class="events-grid">
+      <article class="event-card reveal">
+        <span class="event-icon" aria-hidden="true">🧠</span>
+        <h3 class="event-title">Quiz Night</h3>
+        <span class="event-when">Každých pár týždňov | Utorky o 19:00</span>
+        <p class="event-detail">Tímy 2–6 hráčov. Jedlo + pivo + priatelia. Testuj vedomosti, zasmeluj sa a vyhraj!</p>
+        <a href="tel:+421917261425" class="event-cta" aria-label="Rezervovať miesto na Quiz Night">Rezervácia → 0917 261 425 ›</a>
+      </article>
+      <article class="event-card reveal reveal-delay-1">
+        <span class="event-icon" aria-hidden="true">🎸</span>
+        <h3 class="event-title">Živá hudba na terase</h3>
+        <span class="event-when">Ľudová kapela HRON | Piatky 18:00–22:00</span>
+        <p class="event-detail">Dobrá nálada zaručená. Terasa, live hudba, čerstvý vzduch a skvelé pivo — takto sa robí správny piatok.</p>
+        <a href="#kontakt" class="event-cta">Viac info ›</a>
+      </article>
+      <article class="event-card reveal reveal-delay-2">
+        <span class="event-icon" aria-hidden="true">📺</span>
+        <h3 class="event-title">Športové prenosy</h3>
+        <span class="event-when">Hokej, olympiáda a ďalšie</span>
+        <p class="event-detail">Na veľkej obrazovke, s pivom v ruke — ako sa patrí. Sleduj zápasy v správnej atmosfére.</p>
+        <a href="#kontakt" class="event-cta">Program ›</a>
+      </article>
+      <article class="event-card reveal reveal-delay-3">
+        <span class="event-icon" aria-hidden="true">🎲</span>
+        <h3 class="event-title">Stolová hra večer</h3>
+        <span class="event-when">V spolupráci s Cafe Nance</span>
+        <p class="event-detail">Tímy 2–8 hráčov, 2,5 hodiny zábavy. Stolné hry, smiech a nezabudnuteľné chvíle.</p>
+        <a href="tel:+421917261425" class="event-cta" aria-label="Rezervovať miesto na Stolovú hru">Rezervácia ›</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     GALÉRIA
+     ============================================================ -->
+<section id="galeria" aria-labelledby="gallery-heading">
+  <div class="container">
+    <div class="gallery-header">
+      <span class="section-eyebrow reveal">Naše zátiší</span>
+      <h2 class="section-title reveal reveal-delay-1" id="gallery-heading">Galéria</h2>
+      <p class="section-lead reveal reveal-delay-2" style="margin-inline:auto;">Pozri, ako to u nás vyzerá — a navštív nás, aby si to zažil naživo.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Interiér baru"><span class="gallery-ph-icon" aria-hidden="true">🍺</span><span class="gallery-ph-label">Interiér baru</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Burger s hranolčekmi"><span class="gallery-ph-icon" aria-hidden="true">🍔</span><span class="gallery-ph-label">Burger s hranolčekmi</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Hot Dog špeciál"><span class="gallery-ph-icon" aria-hidden="true">🌭</span><span class="gallery-ph-label">Hot Dog</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Terasa Pikart"><span class="gallery-ph-icon" aria-hidden="true">🌿</span><span class="gallery-ph-label">Terasa</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Ručne robené limonády"><span class="gallery-ph-icon" aria-hidden="true">🍋</span><span class="gallery-ph-label">Limonády</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Čapované pivo"><span class="gallery-ph-icon" aria-hidden="true">🫗</span><span class="gallery-ph-label">Čapované pivo</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Quiz Night večer"><span class="gallery-ph-icon" aria-hidden="true">🧠</span><span class="gallery-ph-label">Quiz Night</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Živá hudba HRON"><span class="gallery-ph-icon" aria-hidden="true">🎸</span><span class="gallery-ph-label">Živá hudba HRON</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Kuracie krídla"><span class="gallery-ph-icon" aria-hidden="true">🍗</span><span class="gallery-ph-label">Kuracie krídla</span></div></div>
+      <div class="gallery-item"><div class="gallery-placeholder" role="img" aria-label="Pivárne špeciality"><span class="gallery-ph-icon" aria-hidden="true">✨</span><span class="gallery-ph-label">Pivárne špeciality</span></div></div>
+    </div>
+    <div class="gallery-footer reveal">
+      <p>Sleduj nás na Instagrame <strong>@pivaren_pikart_2022</strong></p>
+      <a href="https://www.instagram.com/pivaren_pikart_2022/" target="_blank" rel="noopener noreferrer" class="btn btn-outline" aria-label="Sledovať Piváreň Pikart na Instagrame">📸 Instagram</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     RECENZIE
+     ============================================================ -->
+<section id="recenzie" aria-labelledby="reviews-heading">
+  <div class="container">
+    <div class="reviews-header">
+      <span class="section-eyebrow reveal">Čo hovoria hostia</span>
+      <h2 class="section-title reveal reveal-delay-1" id="reviews-heading">Recenzie</h2>
+      <p class="section-lead reveal reveal-delay-2" style="margin-inline:auto;">Neveríš nám? Ver im. Toto hovoria ľudia, ktorí u nás boli.</p>
+    </div>
+    <div class="reviews-grid">
+      <article class="review-card reveal">
+        <div class="review-stars" aria-label="5 z 5 hviezdičiek">★★★★★</div>
+        <p class="review-text">„Veľmi príjemná obsluha, pohotový, ústretový. Výborne jedlo a tatársky biftek môžem len a len odporúčať. Určite sa oplatí ich navštíviť."</p>
+        <div class="review-source">
+          <span class="review-author">Spokojný hosť</span>
+          <span class="review-source-badge">Google</span>
+        </div>
+      </article>
+      <article class="review-card reveal reveal-delay-1">
+        <div class="review-stars" aria-label="5 z 5 hviezdičiek">★★★★★</div>
+        <p class="review-text">„Bol som sa najesť aj s priateľkou, veľmi nám chutilo odporúčam. Skvelé jedlo a príjemná obsluha."</p>
+        <div class="review-source">
+          <span class="review-author">Verný zákazník</span>
+          <span class="review-source-badge">Google</span>
+        </div>
+      </article>
+      <article class="review-card reveal reveal-delay-2">
+        <div class="review-stars" aria-label="5 z 5 hviezdičiek">★★★★★</div>
+        <p class="review-text">„Príjemné posedenie v centre sídliska Sásová v Pikarte. Príjemné a čisté prostredie, s veľkou trampolínou pre deti. Veľmi milý a ochotný personál."</p>
+        <div class="review-source">
+          <span class="review-author">Rodina z Banskej Bystrice</span>
+          <span class="review-source-badge">Google</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     KONTAKT
+     ============================================================ -->
+<section id="kontakt" aria-labelledby="contact-heading">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <span class="section-eyebrow reveal">Nájdi nás</span>
+        <h2 class="section-title reveal reveal-delay-1" id="contact-heading">Kontakt &amp; Otváracie hodiny</h2>
+
+        <div class="contact-item reveal reveal-delay-2">
+          <div class="contact-item-icon" aria-hidden="true">📍</div>
+          <div>
+            <div class="contact-item-label">Adresa</div>
+            <div class="contact-item-value">
+              <a href="https://maps.app.goo.gl/CAVGLHeQe7atMLVW6" target="_blank" rel="noopener noreferrer">Starohorská 4, Banská Bystrica – Sásová</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-item reveal reveal-delay-2">
+          <div class="contact-item-icon" aria-hidden="true">📞</div>
+          <div>
+            <div class="contact-item-label">Telefón</div>
+            <div class="contact-item-value"><a href="tel:+421917261425">0917 261 425</a></div>
+          </div>
+        </div>
+        <div class="contact-item reveal reveal-delay-3">
+          <div class="contact-item-icon" aria-hidden="true">📸</div>
+          <div>
+            <div class="contact-item-label">Instagram</div>
+            <div class="contact-item-value">
+              <a href="https://www.instagram.com/pivaren_pikart_2022/" target="_blank" rel="noopener noreferrer">@pivaren_pikart_2022</a>
+            </div>
+          </div>
+        </div>
+
+        <table class="hours-table reveal reveal-delay-3" aria-label="Otváracie hodiny">
+          <caption style="text-align:start; font-family:var(--font-heading); font-size:11px; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; padding-bottom:8px; display:block;">Otváracie hodiny</caption>
+          <tbody>
+            <tr><td>Pondelok – Štvrtok</td><td>11:00 – 23:00</td></tr>
+            <tr><td>Piatok – Sobota</td><td>11:00 – 24:00</td></tr>
+            <tr><td>Nedeľa</td><td class="hours-closed">Zatvorené</td></tr>
+          </tbody>
+        </table>
+
+        <a href="tel:+421917261425" class="btn btn-primary reveal reveal-delay-4" style="width:fit-content;" aria-label="Rezervovať stôl – zavolajte na 0917 261 425">
+          📞 Rezervovať stôl
+        </a>
+      </div>
+
+      <div class="contact-map reveal reveal-delay-2">
+        <div class="contact-map-wrap">
+          <iframe
+            src="https://maps.google.com/maps?q=Starohorsk%C3%A1+4,+Bansk%C3%A1+Bystrica&output=embed"
+            title="Poloha Piváreň Pikart na Google Maps"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-logo">
+      <svg width="44" height="44" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="48" cy="48" r="46" fill="#1A1518" stroke="#F5A623" stroke-width="2"/>
+        <rect x="30" y="34" width="28" height="32" rx="3" fill="none" stroke="#F5A623" stroke-width="2.2"/>
+        <path d="M58 40 Q70 40 70 50 Q70 60 58 60" fill="none" stroke="#F5A623" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M30 34 Q36 28 42 33 Q48 28 58 34" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="50" r="2" fill="#F5A623" opacity="0.5"/>
+        <circle cx="44" cy="44" r="1.5" fill="#F5A623" opacity="0.4"/>
+        <circle cx="50" cy="52" r="1.5" fill="#F5A623" opacity="0.5"/>
+      </svg>
+      <span style="font-family:var(--font-heading); font-size:18px; letter-spacing:0.06em;">Piváreň Pikart</span>
+    </div>
+
+    <nav class="footer-links" aria-label="Footer navigácia">
+      <a href="#o-nas">O nás</a>
+      <a href="#menu">Menu</a>
+      <a href="#udalosti">Udalosti</a>
+      <a href="#galeria">Galéria</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+
+    <div class="footer-social">
+      <a href="https://www.instagram.com/pivaren_pikart_2022/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Piváreň Pikart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a href="https://maps.app.goo.gl/CAVGLHeQe7atMLVW6" target="_blank" rel="noopener noreferrer" aria-label="Nájsť nás na Google Maps">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+      </a>
+    </div>
+
+    <p class="footer-copy">
+      © 2025 Piváreň Pikart | Starohorská 4, Banská Bystrica – Sásová<br>
+      Vyrobené s <span class="footer-heart" aria-label="láskou">❤</span> pre Pikart
+    </p>
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ---- Sticky navbar ---- */
+  var navbar = document.getElementById('navbar');
+  function onScroll() {
+    if (window.scrollY > 60) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---- Hamburger / mobile nav ---- */
+  var hamburger = document.getElementById('hamburger-btn');
+  var mobileNav = document.getElementById('mobile-nav');
+  var mobileLinks = mobileNav.querySelectorAll('a');
+
+  function openMobileNav() {
+    hamburger.classList.add('open');
+    mobileNav.classList.add('open');
+    mobileNav.setAttribute('aria-hidden', 'false');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMobileNav() {
+    hamburger.classList.remove('open');
+    mobileNav.classList.remove('open');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  hamburger.addEventListener('click', function () {
+    mobileNav.classList.contains('open') ? closeMobileNav() : openMobileNav();
+  });
+  mobileLinks.forEach(function (link) { link.addEventListener('click', closeMobileNav); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+      closeMobileNav();
+      hamburger.focus();
+    }
+  });
+
+  /* ---- Tab switcher ---- */
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  var tabPanels = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = btn.dataset.tab;
+      tabBtns.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+      tabPanels.forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      var panel = document.getElementById('tab-' + target);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  /* ---- Intersection Observer — scroll reveal ---- */
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { observer.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('visible'); });
+  }
+
+  /* ---- Smooth anchor scroll ---- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function (e) {
+      var targetId = anchor.getAttribute('href');
+      if (targetId === '#') return;
+      var targetEl = document.querySelector(targetId);
+      if (targetEl) {
+        e.preventDefault();
+        var navH = navbar.offsetHeight || 70;
+        var top = targetEl.getBoundingClientRect().top + window.scrollY - navH - 16;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

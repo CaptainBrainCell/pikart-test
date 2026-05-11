@@ -1,0 +1,1303 @@
+<!doctype html>
+<html lang="sk" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Piváreň Pikart – piváreň s výbornými pivkami a kuchyňou v Banskej Bystrici, Sásová.">
+<title>Piváreň Pikart | Banská Bystrica – Sásová</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Six+Caps&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===================================================================
+   DESIGN TOKENS — GRILLIFY PALETTE APPLIED TO PIVÁREŇ PIKART
+   =================================================================== */
+:root {
+  --cream:      rgb(250, 235, 215);   /* global BG, hero text, nav links */
+  --near-black: rgb(13, 13, 13);      /* card BGs, footer, ticker */
+  --off-white:  rgb(250, 249, 245);   /* alternate light BG */
+  --charcoal:   rgb(33, 33, 33);      /* dark button border, body text */
+  --dark-brown: rgb(23, 23, 23);      /* body paragraph text */
+  --dusty-rose: rgb(197, 149, 148);   /* drink card — limonády */
+  --slate:      rgb(157, 170, 170);   /* drink card — koktaily */
+  --dark-umber: rgb(72, 61, 59);      /* drink card — whisky */
+  --pure-black: rgb(0, 0, 0);         /* footer BG */
+
+  --font-display: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
+  --font-hero:    'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
+  --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ===================================================================
+   RESET & BASE
+   =================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--dark-brown);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--near-black); color: var(--cream); }
+
+/* ===================================================================
+   UTILITIES
+   =================================================================== */
+/* Pill buttons */
+.btn-cream {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--cream); border-radius: 50px;
+  padding: 10px 22px; background: transparent; color: var(--cream);
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer;
+  text-decoration: none; transition: background 0.22s, color 0.22s;
+  white-space: nowrap;
+}
+.btn-cream:hover { background: var(--cream); color: var(--near-black); }
+
+.btn-dark {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--charcoal); border-radius: 50px;
+  padding: 10px 22px; background: transparent; color: var(--charcoal);
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer;
+  text-decoration: none; transition: background 0.22s, color 0.22s;
+  white-space: nowrap;
+}
+.btn-dark:hover { background: var(--charcoal); color: var(--cream); }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+
+/* ===================================================================
+   1. NAVIGATION
+   =================================================================== */
+#navbar {
+  position: fixed; top: 0; inset-inline: 0; z-index: 1000;
+  height: 90px; display: flex; align-items: center;
+  padding: 0 clamp(20px, 4vw, 60px);
+  transition: background 0.35s ease, backdrop-filter 0.35s;
+}
+#navbar.scrolled {
+  background: rgba(13, 13, 13, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; gap: 24px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+  font-family: var(--font-display); font-size: 26px; letter-spacing: 0.04em;
+  color: var(--cream); line-height: 1;
+}
+.nav-logo-icon {
+  width: 38px; height: 38px; border: 1px solid rgba(250,235,215,0.3);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  color: var(--cream); text-transform: uppercase; letter-spacing: -0.02em;
+  transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 0.6; }
+.nav-cta-wrap { flex-shrink: 0; }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 6px;
+}
+.hamburger span {
+  display: block; width: 26px; height: 2px;
+  background: var(--cream); border-radius: 2px;
+  transition: transform 0.28s, opacity 0.28s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile overlay */
+.mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(13,13,13,0.98); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display); font-size: clamp(48px, 8vw, 80px);
+  color: var(--cream); text-transform: uppercase; transition: opacity 0.2s;
+}
+.mobile-menu a:hover { opacity: 0.6; }
+
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-cta-wrap { display: none; }
+  .hamburger { display: flex; }
+}
+
+/* ===================================================================
+   2. HERO
+   =================================================================== */
+#hero {
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; background: var(--near-black);
+  padding: clamp(116px, 14vh, 150px) 0 clamp(78px, 10vh, 112px);
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(0,0,0,0.04), rgba(0,0,0,0.42) 68%),
+    linear-gradient(rgba(26,26,26,0.5), rgba(26,26,26,0.7)),
+    url('assets/Photos/mp1b9jqs-Screenshot-2026-05-11-163751.png'),
+    linear-gradient(145deg, #2d1f12 0%, #1a1208 35%, #0d0d0d 65%, #1a1006 100%);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(0,0,0,0.04), rgba(0,0,0,0.42) 68%),
+    linear-gradient(rgba(26,26,26,0.5), rgba(26,26,26,0.7));
+}
+.hero-video {
+  position: absolute;
+  inset: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  object-fit: cover;
+  filter: blur(6px);
+  transform: scale(1.03);
+}
+.hero-grain {
+  position: absolute; inset: 0; z-index: 1; opacity: 0.035; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+.hero-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  width: min(100%, 980px);
+  gap: clamp(14px, 2.1vh, 24px); text-align: center; padding: 0 clamp(18px, 4vw, 60px);
+}
+.hero-eyebrow {
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: rgba(250,235,215,0.58); text-transform: uppercase; letter-spacing: 0.18em;
+  margin-bottom: clamp(34px, 5vh, 58px);
+}
+.hero-h1 {
+  font-family: var(--font-hero);
+  font-size: clamp(76px, 11.8vw, 188px);
+  font-weight: 400; color: var(--cream);
+  text-transform: uppercase; letter-spacing: 0.015em; line-height: 0.86;
+  text-wrap: balance;
+}
+.hero-title-line { display: block; }
+.hero-tagline {
+  font-family: var(--font-body); font-size: clamp(14px, 1.4vw, 18px);
+  color: rgba(250,235,215,0.72); max-width: 540px; line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; padding-top: 4px; }
+.hero-scroll {
+  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: rgba(250,235,215,0.35); font-family: var(--font-body); font-size: 11px;
+  font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em;
+  animation: bob 2.4s ease-in-out infinite;
+}
+@keyframes bob {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
+
+@media (max-width: 760px) {
+  #hero {
+    justify-content: center;
+    padding: 116px 0 72px;
+  }
+  .hero-bg { background-position: 35% center; }
+  .hero-content {
+    gap: 16px;
+    padding-inline: 20px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    max-width: 280px;
+    line-height: 1.5;
+    margin-bottom: 34px;
+  }
+  .hero-h1 {
+    font-size: clamp(72px, 25vw, 116px);
+    line-height: 0.88;
+  }
+  .hero-tagline br { display: none; }
+  .hero-ctas {
+    width: min(100%, 340px);
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-ctas .btn-cream { justify-content: center; width: 100%; }
+  .hero-scroll { display: none; }
+}
+
+@media (max-height: 760px) and (min-width: 761px) {
+  #hero { padding-top: 108px; padding-bottom: 64px; }
+  .hero-h1 { font-size: clamp(76px, 10vw, 148px); }
+  .hero-content { gap: 12px; }
+  .hero-scroll { display: none; }
+}
+
+/* ===================================================================
+   3. O NÁS
+   =================================================================== */
+#o-nas { background: var(--cream); padding: 100px 0 80px; }
+
+.about-headline {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 14vw, 240px);
+  font-weight: 400; color: var(--near-black);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+  text-align: center; margin-bottom: 56px;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+/* Photo strip — 7 gradient placeholder frames flush-width */
+.photo-strip { display: flex; height: 140px; overflow: hidden; margin-bottom: 72px; }
+.ps-item {
+  flex: 1; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+}
+.ps-item:nth-child(1) { background: linear-gradient(145deg, #2d1f12, #1a0d06); }
+.ps-item:nth-child(2) { background: linear-gradient(145deg, #3d2818, #221408); }
+.ps-item:nth-child(3) { background: linear-gradient(145deg, #1a1410, #0d0a08); }
+.ps-item:nth-child(4) { background: linear-gradient(145deg, #2a1c10, #160c06); }
+.ps-item:nth-child(5) { background: linear-gradient(145deg, #3a2618, #221208); }
+.ps-item:nth-child(6) { background: linear-gradient(145deg, #1f1a15, #140e08); }
+.ps-item:nth-child(7) { background: linear-gradient(145deg, #2d2010, #1a1008); }
+.ps-icon { font-size: 28px; opacity: 0.4; }
+.ps-label {
+  font-family: var(--font-body); font-size: 10px; font-weight: 500;
+  color: rgba(250,235,215,0.3); text-transform: uppercase; letter-spacing: 0.12em;
+  text-align: center; padding: 0 8px;
+}
+
+.about-body {
+  display: flex; flex-direction: column; align-items: center; gap: 28px;
+  text-align: center; padding: 0 clamp(20px, 4vw, 60px);
+}
+.about-body p {
+  font-family: var(--font-body); font-size: 18px; font-weight: 400;
+  color: var(--dark-brown); max-width: 560px; line-height: 1.72; letter-spacing: -0.02em;
+}
+.about-stats {
+  display: flex; gap: 48px; flex-wrap: wrap; justify-content: center;
+  padding-top: 40px; margin-top: 12px;
+  border-top: 1px solid rgba(13,13,13,0.12);
+}
+.stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.stat-val {
+  font-family: var(--font-display); font-size: clamp(32px, 3.5vw, 56px);
+  color: var(--near-black); text-transform: uppercase; line-height: 1;
+}
+.stat-lbl {
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  color: rgba(13,13,13,0.45); text-transform: uppercase; letter-spacing: 0.1em;
+}
+
+/* ===================================================================
+   4. TICKER / MARQUEE
+   =================================================================== */
+.ticker-wrap {
+  background: var(--near-black); height: 53px;
+  overflow: hidden; display: flex; align-items: center;
+}
+.ticker-track {
+  display: flex; align-items: center; white-space: nowrap;
+  animation: ticker 36s linear infinite;
+}
+.ticker-item {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: var(--cream); text-transform: uppercase; letter-spacing: -0.02em;
+  padding: 0 20px;
+}
+.ticker-sep { color: rgba(250,235,215,0.3); padding: 0 6px; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ===================================================================
+   5. MENU CARDS — "Our Signature Bites" style
+   =================================================================== */
+#menu { background: var(--cream); padding: 80px clamp(20px, 4vw, 60px) 100px; }
+
+.menu-hdr { text-align: center; margin-bottom: 80px; }
+.menu-headline {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 12vw, 220px);
+  font-weight: 400; color: var(--near-black);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+  margin-bottom: 20px;
+}
+.menu-sub {
+  font-family: var(--font-body); font-size: 18px; font-weight: 400;
+  color: rgba(23,23,23,0.6); max-width: 680px; margin-inline: auto;
+  line-height: 1.65; letter-spacing: -0.02em;
+}
+
+.menu-cards {
+  display: flex; flex-direction: column; gap: 28px;
+  max-width: 1120px; margin-inline: auto;
+}
+
+/* Individual card */
+.mc {
+  border-radius: 20px; padding: 40px 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+  position: relative; overflow: hidden; transition: transform 0.35s ease;
+}
+.mc.dark-card  { background: var(--near-black); }
+.mc.cream-card { background: var(--cream); border: 1px solid rgba(13,13,13,0.1); }
+.mc:nth-child(1) { transform: rotate(0.5deg); }
+.mc:nth-child(2) { transform: rotate(-0.4deg); }
+.mc:nth-child(3) { transform: rotate(0.3deg); }
+.mc:nth-child(4) { transform: rotate(-0.5deg); }
+.mc:hover { transform: rotate(0deg) scale(1.005) !important; }
+
+/* Watermark text behind card content */
+.mc-wm {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; pointer-events: none;
+}
+.mc-wm span {
+  font-family: var(--font-display); font-size: clamp(80px, 10vw, 180px);
+  font-weight: 400; text-transform: uppercase; letter-spacing: -0.01em;
+  white-space: nowrap; line-height: 1;
+}
+.dark-card .mc-wm span  { color: var(--cream); opacity: 0.03; }
+.cream-card .mc-wm span { color: var(--near-black); opacity: 0.04; }
+
+/* Left content block */
+.mc-left { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 18px; }
+
+.mc-badge {
+  display: inline-flex; align-items: center; border-radius: 50px;
+  padding: 4px 14px; font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em; width: fit-content;
+}
+.dark-card .mc-badge  { background: rgba(250,235,215,0.1); color: rgba(250,235,215,0.7); border: 1px solid rgba(250,235,215,0.15); }
+.cream-card .mc-badge { background: rgba(13,13,13,0.07); color: rgba(13,13,13,0.55); border: 1px solid rgba(13,13,13,0.12); }
+
+.mc-name {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5.5vw, 88px);
+  font-weight: 400; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.92;
+}
+.dark-card .mc-name  { color: var(--cream); }
+.cream-card .mc-name { color: var(--near-black); }
+
+.mc-desc {
+  font-family: var(--font-body); font-size: 16px; font-weight: 400;
+  line-height: 1.65; max-width: 360px; letter-spacing: -0.01em;
+}
+.dark-card .mc-desc  { color: rgba(250,235,215,0.58); }
+.cream-card .mc-desc { color: rgba(23,23,23,0.62); }
+
+/* Right image placeholder */
+.mc-img {
+  aspect-ratio: 4/3; border-radius: 14px; position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  overflow: hidden;
+}
+.dark-card .mc-img  { background: linear-gradient(135deg, rgba(250,235,215,0.04), rgba(250,235,215,0.1)); border: 1px solid rgba(250,235,215,0.1); }
+.cream-card .mc-img { background: linear-gradient(135deg, rgba(13,13,13,0.04), rgba(13,13,13,0.1)); border: 1px solid rgba(13,13,13,0.1); }
+.mc-img-icon { font-size: 72px; }
+.mc-img-lbl {
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.12em;
+}
+.dark-card .mc-img-lbl  { color: rgba(250,235,215,0.28); }
+.cream-card .mc-img-lbl { color: rgba(13,13,13,0.28); }
+
+@media (max-width: 768px) {
+  .mc { grid-template-columns: 1fr; padding: 28px 24px; }
+  .mc-img { aspect-ratio: 16/9; }
+  .mc:nth-child(n) { transform: none; }
+  .mc:hover { transform: none !important; }
+}
+
+/* ===================================================================
+   6. UDALOSTI — "Speakeasy" style dark section
+   =================================================================== */
+#udalosti { background: var(--near-black); }
+
+/* Split hero with centered text overlay */
+.udalosti-hero {
+  display: grid; grid-template-columns: 1fr 1fr;
+  height: 580px; position: relative; overflow: hidden;
+}
+.uh-panel {
+  display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+}
+.uh-panel:first-child { border-right: 1px solid rgba(250,235,215,0.06); }
+.uh-panel-bg { position: absolute; inset: 0; }
+.uh-panel:nth-child(1) .uh-panel-bg { background: linear-gradient(150deg, #251a0e 0%, #1a1008 55%, #0d0d0d 100%); }
+.uh-panel:nth-child(2) .uh-panel-bg { background: linear-gradient(150deg, #0d0d0d 0%, #14100a 55%, #1f1408 100%); }
+.uh-panel-emoji { font-size: 90px; opacity: 0.25; position: relative; z-index: 2; }
+
+/* Overlay floats over both panels */
+.uh-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; text-align: center; padding: 40px;
+}
+.uh-line { width: min(640px, 80%); height: 1px; background: rgba(250,235,215,0.2); }
+.uh-headline {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 10vw, 180px);
+  font-weight: 400; color: var(--cream);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+}
+.uh-sub {
+  font-family: var(--font-body); font-size: clamp(14px, 1.3vw, 17px);
+  color: rgba(250,235,215,0.6); max-width: 440px; line-height: 1.65;
+  letter-spacing: -0.01em;
+}
+
+/* 2×2 event cards */
+.udalosti-cards {
+  padding: 80px clamp(20px, 4vw, 60px) 100px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  max-width: 1400px; margin-inline: auto;
+}
+.ev-card {
+  background: rgba(250,235,215,0.04); border: 1px solid rgba(250,235,215,0.08);
+  border-radius: 16px; padding: 36px;
+  display: flex; flex-direction: column; gap: 14px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.ev-card:hover { border-color: rgba(250,235,215,0.22); background: rgba(250,235,215,0.07); }
+.ev-icon { font-size: 38px; }
+.ev-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4.5vw, 72px);
+  font-weight: 400; color: var(--cream);
+  text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.92;
+}
+.ev-when {
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  color: rgba(250,235,215,0.42); text-transform: uppercase; letter-spacing: 0.1em;
+}
+.ev-desc { font-family: var(--font-body); font-size: 15px; color: rgba(250,235,215,0.55); line-height: 1.65; }
+.ev-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  color: rgba(250,235,215,0.45); text-transform: uppercase; letter-spacing: 0.06em;
+  margin-top: 4px; transition: color 0.2s, gap 0.2s;
+}
+.ev-cta:hover { color: var(--cream); gap: 10px; }
+
+@media (max-width: 768px) {
+  .udalosti-hero { grid-template-columns: 1fr; height: auto; }
+  .uh-panel { height: 200px; }
+  .uh-overlay { position: relative; inset: auto; background: transparent; }
+  .udalosti-cards { grid-template-columns: 1fr; }
+}
+
+/* ===================================================================
+   7. NÁPOJE — "Brewery" style horizontal scroll
+   =================================================================== */
+#napoje { background: var(--cream); padding: 100px 0; overflow: hidden; }
+
+.napoje-hdr { text-align: center; padding: 0 clamp(20px, 4vw, 60px) 60px; }
+.napoje-headline {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 12vw, 220px);
+  font-weight: 400; color: var(--near-black);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+  margin-bottom: 20px;
+}
+.napoje-sub {
+  font-family: var(--font-body); font-size: 18px; font-weight: 400;
+  color: rgba(23,23,23,0.6); max-width: 540px; margin-inline: auto;
+  line-height: 1.65; letter-spacing: -0.02em;
+}
+.napoje-carousel {
+  display: flex; gap: 20px;
+  padding: 0 clamp(20px, 4vw, 60px) 36px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: thin; scrollbar-color: rgba(13,13,13,0.2) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.napoje-carousel::-webkit-scrollbar { height: 4px; }
+.napoje-carousel::-webkit-scrollbar-track { background: transparent; }
+.napoje-carousel::-webkit-scrollbar-thumb { background: rgba(13,13,13,0.2); border-radius: 2px; }
+
+.nc {
+  flex-shrink: 0; width: clamp(260px, 28vw, 370px); min-height: 520px;
+  border-radius: 20px; padding: 36px 28px; scroll-snap-align: start;
+  display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden;
+}
+.nc.nc-dark  { background: var(--near-black); }
+.nc.nc-rose  { background: var(--dusty-rose); }
+.nc.nc-slate { background: var(--slate); }
+.nc.nc-umber { background: var(--dark-umber); }
+
+.nc-spec {
+  font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.55;
+}
+.nc-dark .nc-spec  { color: var(--cream); }
+.nc-rose .nc-spec  { color: var(--near-black); }
+.nc-slate .nc-spec { color: var(--near-black); }
+.nc-umber .nc-spec { color: var(--cream); }
+
+.nc-name {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 64px);
+  font-weight: 400; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.92;
+}
+.nc-dark .nc-name  { color: var(--cream); }
+.nc-rose .nc-name  { color: var(--near-black); }
+.nc-slate .nc-name { color: var(--near-black); }
+.nc-umber .nc-name { color: var(--cream); }
+
+.nc-desc {
+  font-family: var(--font-body); font-size: 14px; line-height: 1.65; flex: 1;
+  letter-spacing: -0.01em;
+}
+.nc-dark .nc-desc  { color: rgba(250,235,215,0.58); }
+.nc-rose .nc-desc  { color: rgba(13,13,13,0.68); }
+.nc-slate .nc-desc { color: rgba(13,13,13,0.68); }
+.nc-umber .nc-desc { color: rgba(250,235,215,0.62); }
+
+.nc-icon { font-size: 72px; text-align: center; margin-top: auto; padding-bottom: 8px; }
+
+.nc-pairing {
+  font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.42;
+}
+.nc-dark .nc-pairing  { color: var(--cream); }
+.nc-rose .nc-pairing  { color: var(--near-black); }
+.nc-slate .nc-pairing { color: var(--near-black); }
+.nc-umber .nc-pairing { color: var(--cream); }
+
+/* ===================================================================
+   8. REZERVÁCIA — "Book Your Table" dark hero
+   =================================================================== */
+#rezervacia {
+  height: clamp(380px, 45vw, 660px);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; text-align: center;
+  padding: 60px clamp(20px, 4vw, 60px);
+}
+.rez-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(rgba(26,26,26,0.72), rgba(26,26,26,0.72)),
+    linear-gradient(145deg, #2d1f12 0%, #1a1208 38%, #0d0d0d 70%);
+}
+.rez-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+}
+.rez-headline {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 12vw, 220px);
+  font-weight: 400; color: var(--cream);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+}
+.rez-sub {
+  font-family: var(--font-body); font-size: clamp(15px, 1.4vw, 18px);
+  color: rgba(250,235,215,0.62); max-width: 460px; line-height: 1.65; letter-spacing: -0.01em;
+}
+
+/* ===================================================================
+   9. GALLERY STRIP — 5 flush panels
+   =================================================================== */
+.gallery-strip { display: flex; height: 220px; overflow: hidden; }
+.gs-item {
+  flex: 1; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; transition: flex 0.4s ease;
+}
+.gs-item:hover { flex: 1.65; }
+.gs-bg { position: absolute; inset: 0; transition: transform 0.4s ease; }
+.gs-item:hover .gs-bg { transform: scale(1.06); }
+.gs-item:nth-child(1) .gs-bg { background: linear-gradient(145deg, #2d1f12, #1a0d06); }
+.gs-item:nth-child(2) .gs-bg { background: linear-gradient(145deg, #3d2818, #221408); }
+.gs-item:nth-child(3) .gs-bg { background: linear-gradient(145deg, #1a1410, #0d0a08); }
+.gs-item:nth-child(4) .gs-bg { background: linear-gradient(145deg, #2a1c10, #160c06); }
+.gs-item:nth-child(5) .gs-bg { background: linear-gradient(145deg, #3a2618, #221208); }
+.gs-icon { font-size: 32px; opacity: 0.38; position: relative; z-index: 2; }
+.gs-label {
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
+  color: rgba(250,235,215,0.32); text-transform: uppercase; letter-spacing: 0.14em;
+  position: relative; z-index: 2; text-align: center; padding: 0 8px;
+}
+
+/* ===================================================================
+   10. RECENZIE — cream section before footer
+   =================================================================== */
+#recenzie { background: var(--cream); padding: 100px clamp(20px, 4vw, 60px); }
+
+.rec-headline {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 11vw, 200px);
+  font-weight: 400; color: var(--near-black);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+  text-align: center; margin-bottom: 60px;
+}
+.rec-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  max-width: 1200px; margin-inline: auto;
+}
+.rec-card {
+  background: var(--near-black); border-radius: 16px; padding: 32px;
+  display: flex; flex-direction: column; gap: 16px;
+  transition: transform 0.25s;
+}
+.rec-card:hover { transform: translateY(-3px); }
+.rec-stars { font-size: 20px; color: var(--cream); letter-spacing: 3px; }
+.rec-text {
+  font-family: var(--font-body); font-style: italic; font-size: 15px;
+  color: rgba(250,235,215,0.8); line-height: 1.75; flex: 1;
+}
+.rec-meta { font-family: var(--font-body); font-size: 12px; font-weight: 600; color: rgba(250,235,215,0.35); text-transform: uppercase; letter-spacing: 0.1em; }
+.rec-badge {
+  display: inline; border: 1px solid rgba(250,235,215,0.15); border-radius: 50px;
+  padding: 2px 8px; font-size: 10px; color: rgba(250,235,215,0.38); margin-inline-start: 8px;
+}
+
+@media (max-width: 900px) {
+  .rec-grid {
+    display: flex; flex-direction: row; overflow-x: auto; gap: 16px;
+    padding-bottom: 12px; scrollbar-width: none;
+  }
+  .rec-grid::-webkit-scrollbar { display: none; }
+  .rec-card { min-width: 280px; flex-shrink: 0; }
+}
+
+/* ===================================================================
+   11. FOOTER — pure black
+   =================================================================== */
+footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40px; }
+
+.footer-headline {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 13vw, 200px);
+  font-weight: 400; color: var(--cream);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+  text-align: center; margin-bottom: 80px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+  max-width: 1100px; margin-inline: auto;
+  padding-bottom: 80px;
+  border-bottom: 1px solid rgba(250,235,215,0.08);
+}
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 76px);
+  font-weight: 400; color: var(--cream); text-transform: uppercase;
+  letter-spacing: -0.01em; line-height: 0.92; margin-bottom: 28px;
+}
+.footer-col p,
+.footer-col a {
+  font-family: var(--font-body); font-size: 14px; font-weight: 400;
+  color: rgba(250,235,215,0.52); text-transform: uppercase; letter-spacing: 0.04em;
+  line-height: 2.2; display: block; text-decoration: none;
+}
+.footer-col a:hover { color: var(--cream); }
+.footer-col address { font-style: normal; }
+
+.footer-hours { display: flex; flex-direction: column; }
+.fh-row { display: flex; justify-content: space-between; gap: 12px; }
+.fh-row span:last-child { color: rgba(250,235,215,0.38); }
+
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 32px; flex-wrap: wrap; gap: 12px;
+}
+.footer-bottom p {
+  font-family: var(--font-body); font-size: 12px; font-weight: 400;
+  color: rgba(250,235,215,0.22); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+@media (max-width: 768px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================================================================
+     1. NAVIGATION
+     =================================================================== -->
+<nav id="navbar" role="navigation" aria-label="Hlavná navigácia">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a href="#" class="nav-logo" aria-label="Piváreň Pikart – domov">
+      <span class="nav-logo-icon" aria-hidden="true">PP</span>
+      Piváreň Pikart
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="nav-links" role="list">
+      <li><a href="#o-nas">O nás</a></li>
+      <li><a href="#menu">Jedlo</a></li>
+      <li><a href="#udalosti">Udalosti</a></li>
+      <li><a href="#napoje">Nápoje</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+
+    <!-- CTA -->
+    <div class="nav-cta-wrap">
+      <a href="tel:+421917261425" class="btn-cream" aria-label="Rezervovať stôl – zavolajte nám">Rezervovať stôl</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger-btn" aria-label="Otvoriť menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav overlay -->
+<nav class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobilné menu" aria-hidden="true">
+  <a href="#o-nas"    class="mobile-link">O nás</a>
+  <a href="#menu"     class="mobile-link">Jedlo</a>
+  <a href="#udalosti" class="mobile-link">Udalosti</a>
+  <a href="#napoje"   class="mobile-link">Nápoje</a>
+  <a href="#kontakt"  class="mobile-link">Kontakt</a>
+  <a href="tel:+421917261425" class="btn-cream">Rezervovať stôl</a>
+</nav>
+
+
+<!-- ===================================================================
+     2. HERO
+     =================================================================== -->
+<section id="hero" aria-label="Úvod">
+  <div class="hero-bg" aria-hidden="true">
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/Photos/mp1b9jqs-Screenshot-2026-05-11-163751.png">
+      <source src="assets/Videos/PIKART.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-grain" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Sásová, Banská Bystrica — od roku 2022</p>
+    <h1 class="hero-h1" aria-label="Piváreň Pikart">
+      <span class="hero-title-line" aria-hidden="true">Piváreň</span>
+      <span class="hero-title-line" aria-hidden="true">Pikart</span>
+    </h1>
+    <p class="hero-tagline">
+      Piváreň s výbornými pivkami, kde si určite nájdete<br>svoje obľúbené aj vy.
+    </p>
+    <div class="hero-ctas">
+      <a href="tel:+421917261425" class="btn-cream" aria-label="Rezervovať stôl – zavolajte na 0917 261 425">Rezervovať stôl</a>
+      <a href="#menu" class="btn-cream">Pozrieť jedlo</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Scroll
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     3. O NÁS
+     =================================================================== -->
+<section id="o-nas" aria-labelledby="about-heading">
+
+  <h2 class="about-headline reveal" id="about-heading">Zrodení<br>pre chuť</h2>
+
+  <!-- Photo strip — 7 real photos -->
+  <div class="photo-strip" aria-hidden="true">
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9jqs-Screenshot-2026-05-11-163751.png');background-size:cover;background-position:center;"></div>
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9jjn-Screenshot-2026-05-11-163710.png');background-size:cover;background-position:center top;"></div>
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9jvt-Screenshot-2026-05-11-163939.png');background-size:cover;background-position:center;"></div>
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9k02-Screenshot-2026-05-11-164106.png');background-size:cover;background-position:center;"></div>
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9jv7-Screenshot-2026-05-11-163900.png');background-size:cover;background-position:center;"></div>
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9jxf-Screenshot-2026-05-11-163951.png');background-size:cover;background-position:center;"></div>
+    <div class="ps-item" style="background-image:url('assets/Photos/mp1b9jua-Screenshot-2026-05-11-163827.png');background-size:cover;background-position:center;"></div>
+  </div>
+
+  <div class="about-body">
+    <p class="reveal">
+      Piváreň Pikart otvorila svoje dvere v roku 2022 v srdci sídliska Sásová
+      v Banskej Bystrici. Vytvorili sme miesto, kde sa dá pohodlne posedieť,
+      dobre najesť a vybrať si z výborných piviek.
+    </p>
+    <p class="reveal reveal-d1">
+      Náš interiér kombinuje rustikálne drevo a kameň s priateľskou atmosférou —
+      a vonku na terase ťa čaká čerstvý vzduch, živá hudba a dobrá nálada.
+    </p>
+    <a href="tel:+421917261425" class="btn-dark reveal reveal-d2" aria-label="Zavolajte nám a rezervujte stôl">Rezervovať stôl</a>
+
+    <div class="about-stats reveal reveal-d2">
+      <div class="stat"><span class="stat-val">2022</span><span class="stat-lbl">Rok otvorenia</span></div>
+      <div class="stat"><span class="stat-val">Sásová</span><span class="stat-lbl">Sídlisko BB</span></div>
+      <div class="stat"><span class="stat-val">6 dní</span><span class="stat-lbl">Otvorené</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     4. TICKER
+     =================================================================== -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <!-- Duplicated for seamless loop -->
+    <span class="ticker-item">Piváreň Pikart</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Sásová, Banská Bystrica</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Otvorené 6 dní v týždni</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Burgery &amp; Hot Dogy</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Točené pivo</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Quiz Night</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Živá hudba HRON</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Domáce limonády</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Piváreň Pikart</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Sásová, Banská Bystrica</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Otvorené 6 dní v týždni</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Burgery &amp; Hot Dogy</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Točené pivo</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Quiz Night</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Živá hudba HRON</span><span class="ticker-sep">/</span>
+    <span class="ticker-item">Domáce limonády</span><span class="ticker-sep">/</span>
+  </div>
+</div>
+
+
+<!-- ===================================================================
+     5. MENU CARDS
+     =================================================================== -->
+<section id="menu" aria-labelledby="menu-heading">
+  <div class="menu-hdr">
+    <h2 class="menu-headline reveal" id="menu-heading">Naše<br>špeciality</h2>
+    <p class="menu-sub reveal reveal-d1">
+      Každý burger začína ručne vybraným mäsom, čerstvo upečenými žemľami
+      a omáčkami pripraveným priamo v kuchyni. Žiadne kompromisy — len dobrá chuť.
+    </p>
+  </div>
+
+  <div class="menu-cards">
+
+    <!-- Card 1 — dark -->
+    <article class="mc dark-card reveal">
+      <div class="mc-wm" aria-hidden="true"><span>BURGER</span></div>
+      <div class="mc-left">
+        <span class="mc-badge">Podpisové jedlo</span>
+        <h3 class="mc-name">Pikatový<br>Burger</h3>
+        <p class="mc-desc">
+          Šťavnaté mäso, čerstvé ingrediencie, prémiové žemle. Každý burger
+          je malé majstrovské dielo — správne dochutené, správne pečené.
+        </p>
+        <a href="#kontakt" class="btn-cream">Navštív nás</a>
+      </div>
+      <div class="mc-img" role="img" aria-label="Pikatový Burger">
+        <img src="assets/Photos/mp1b9jjn-Screenshot-2026-05-11-163710.png" alt="Pikatový Burger" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+    </article>
+
+    <!-- Card 2 — cream -->
+    <article class="mc cream-card reveal reveal-d1">
+      <div class="mc-wm" aria-hidden="true"><span>HOT DOG</span></div>
+      <div class="mc-left">
+        <span class="mc-badge">Šéfov tip</span>
+        <h3 class="mc-name">Ťahaný<br>Hot Dog</h3>
+        <p class="mc-desc">
+          S ťahaným mäsom — žiadny obyčajný hot dog. Toto je zážitok,
+          na ktorý sa nezabúda. Chrumkavý vonku, šťavnatý vnútri.
+        </p>
+        <a href="#kontakt" class="btn-dark">Navštív nás</a>
+      </div>
+      <div class="mc-img" role="img" aria-label="Ťahaný Hot Dog">
+        <img src="assets/Photos/mp1b9jyh-Screenshot-2026-05-11-164021.png" alt="Ťahaný Hot Dog" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+    </article>
+
+    <!-- Card 3 — dark -->
+    <article class="mc dark-card reveal">
+      <div class="mc-wm" aria-hidden="true"><span>KRÍDLA</span></div>
+      <div class="mc-left">
+        <span class="mc-badge">Ideálne k pivu</span>
+        <h3 class="mc-name">Kuracie<br>Krídla</h3>
+        <p class="mc-desc">
+          Chrumkavé, správne dochutené. K pivu ako stvorené — ideálny
+          spoločník na dlhý piatkový večer s kamarátmi.
+        </p>
+        <a href="#kontakt" class="btn-cream">Navštív nás</a>
+      </div>
+      <div class="mc-img" role="img" aria-label="Kuracie Krídla">
+        <img src="assets/Photos/mp1b9k2i-Screenshot-2026-05-11-164123.png" alt="Kuracie Krídla" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+    </article>
+
+    <!-- Card 4 — cream -->
+    <article class="mc cream-card reveal reveal-d1">
+      <div class="mc-wm" aria-hidden="true"><span>GULÁŠ</span></div>
+      <div class="mc-left">
+        <span class="mc-badge">Udalostná špeciality</span>
+        <h3 class="mc-name">Kotlíkový<br>Guláš</h3>
+        <p class="mc-desc">
+          Špeciálna udalostná pochúťka varená v kotlíku. Pýtaj sa na
+          aktuálnu dostupnosť — nestáva sa každý deň.
+        </p>
+        <a href="tel:+421917261425" class="btn-dark" aria-label="Zavolajte a spýtajte sa na guláš">Spýtaj sa</a>
+      </div>
+      <div class="mc-img" role="img" aria-label="Kotlíkový Guláš">
+        <img src="assets/Photos/mp1b9jp4-Screenshot-2026-05-11-163738.png" alt="Kotlíkový Guláš" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     6. UDALOSTI — Speakeasy style
+     =================================================================== -->
+<section id="udalosti" aria-labelledby="udalosti-heading">
+
+  <!-- Split panels with overlay headline -->
+  <div class="udalosti-hero">
+    <div class="uh-panel" aria-hidden="true">
+      <div class="uh-panel-bg" style="background-image:linear-gradient(rgba(0,0,0,0.38),rgba(0,0,0,0.38)),url('assets/Photos/mp1b9jxf-Screenshot-2026-05-11-163951.png');background-size:cover;background-position:center;"></div>
+    </div>
+    <div class="uh-panel" aria-hidden="true">
+      <div class="uh-panel-bg" style="background-image:linear-gradient(rgba(0,0,0,0.38),rgba(0,0,0,0.38)),url('assets/Photos/mp1b9jsv-Screenshot-2026-05-11-163811.png');background-size:cover;background-position:center;"></div>
+    </div>
+    <div class="uh-overlay">
+      <div class="uh-line"></div>
+      <h2 class="uh-headline" id="udalosti-heading">Večery<br>v Pikarte</h2>
+      <p class="uh-sub">
+        Nikdy tu nie je nuda. Kvízy, živá hudba, šport a stolové hry —
+        vždy je čo zažiť a dôvod prísť.
+      </p>
+      <div class="uh-line"></div>
+    </div>
+  </div>
+
+  <!-- 2×2 event cards -->
+  <div class="udalosti-cards">
+
+    <article class="ev-card reveal">
+      <span class="ev-icon" aria-hidden="true">01</span>
+      <h3 class="ev-title">Quiz Night</h3>
+      <span class="ev-when">Každých pár týždňov · Utorky o 19:00</span>
+      <p class="ev-desc">Tímy 2–6 hráčov. Jedlo + pivo + priatelia. Testuj vedomosti, zasmeluj sa a vyhraj!</p>
+      <a href="tel:+421917261425" class="ev-cta" aria-label="Rezervujte miesto na Quiz Night">Rezervácia → 0917 261 425 ›</a>
+    </article>
+
+    <article class="ev-card reveal reveal-d1">
+      <span class="ev-icon" aria-hidden="true">02</span>
+      <h3 class="ev-title">Živá hudba</h3>
+      <span class="ev-when">Ľudová kapela HRON · Piatky 18:00–22:00</span>
+      <p class="ev-desc">Dobrá nálada zaručená. Terasa, live hudba, čerstvý vzduch a skvelé pivo — takto sa robí správny piatok.</p>
+      <a href="#kontakt" class="ev-cta">Viac info ›</a>
+    </article>
+
+    <article class="ev-card reveal reveal-d1">
+      <span class="ev-icon" aria-hidden="true">03</span>
+      <h3 class="ev-title">Šport live</h3>
+      <span class="ev-when">Hokej, olympiáda a ďalšie · Veľká obrazovka</span>
+      <p class="ev-desc">S pivom v ruke a kamarátmi po boku — sleduj zápasy v správnej atmosfére, nie doma na pohovke.</p>
+      <a href="#kontakt" class="ev-cta">Program ›</a>
+    </article>
+
+    <article class="ev-card reveal reveal-d2">
+      <span class="ev-icon" aria-hidden="true">04</span>
+      <h3 class="ev-title">Stolové hry</h3>
+      <span class="ev-when">V spolupráci s Cafe Nance · Tímy 2–8 hráčov</span>
+      <p class="ev-desc">2,5 hodiny zábavy so stolovými hrami, jedlom a pivom. Ideálne na firemný večierok alebo voľný štvrtok.</p>
+      <a href="tel:+421917261425" class="ev-cta" aria-label="Rezervujte miesto na stolové hry">Rezervácia ›</a>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     7. NÁPOJE — horizontal scroll carousel
+     =================================================================== -->
+<section id="napoje" aria-labelledby="napoje-heading">
+  <div class="napoje-hdr">
+    <h2 class="napoje-headline reveal" id="napoje-heading">Z nášho<br>baru</h2>
+    <p class="napoje-sub reveal reveal-d1">
+      Od čapovaného Staropramenu až po ručne vyrábané limonády — každý si u nás
+      nájde svoje. Správna teplota, správna chuť, vždy.
+    </p>
+  </div>
+
+  <div class="napoje-carousel" role="region" aria-label="Karusel nápojov — skrolovateľné">
+
+    <div class="nc nc-dark">
+      <span class="nc-spec">Čapované · Staropramen</span>
+      <h3 class="nc-name">Točené<br>pivo</h3>
+      <p class="nc-desc">Staropramen a ďalšie pivárenské špeciality čapované na správnu teplotu s dokonalou penou. Tak ako má byť.</p>
+      <span class="nc-icon" aria-hidden="true">01</span>
+      <span class="nc-pairing">Ideálne k burgeru alebo krídlam</span>
+    </div>
+
+    <div class="nc nc-rose">
+      <span class="nc-spec">Ručne vyrábané · 5 príchutí</span>
+      <h3 class="nc-name">Domáce<br>limonády</h3>
+      <p class="nc-desc">Baza-Mäta, Jahoda-Mäta, Pomaranč, Uhorka-Mäta, Levanduľa-Čučoriedka. Každá je príbeh sama o sebe.</p>
+      <span class="nc-icon" aria-hidden="true">02</span>
+      <span class="nc-pairing">Bezalkoholová voľba pre každú príležitosť</span>
+    </div>
+
+    <div class="nc nc-umber">
+      <span class="nc-spec">Prémiový výber · Jameson &amp; more</span>
+      <h3 class="nc-name">Whisky<br>&amp; Spirits</h3>
+      <p class="nc-desc">Jameson a bohatý výber prémiových liehovín pre tých, čo si vedia vychutnať kvapku kvalitného po dlhom týždni.</p>
+      <span class="nc-icon" aria-hidden="true">03</span>
+      <span class="nc-pairing">Pre tých, čo vedia oceniť kvalitu</span>
+    </div>
+
+    <div class="nc nc-slate">
+      <span class="nc-spec">Sezónne mixy · Každý mesiac iné</span>
+      <h3 class="nc-name">Sezónne<br>koktaily</h3>
+      <p class="nc-desc">Mixy tvorené s chuťou podľa ročného obdobia. Každá sezóna prináša nové kombinácie, ktoré ťa prekvapia.</p>
+      <span class="nc-icon" aria-hidden="true">04</span>
+      <span class="nc-pairing">Pýtaj sa čašníka na dnešné špeciality</span>
+    </div>
+
+    <div class="nc nc-dark">
+      <span class="nc-spec">Teplé nápoje · Celý deň</span>
+      <h3 class="nc-name">Káva<br>&amp; Čaj</h3>
+      <p class="nc-desc">Čerstvá espresso, latte, kapučíno — a čaj pre tých, čo hľadajú pokojný začiatok alebo koniec dňa.</p>
+      <span class="nc-icon" aria-hidden="true">05</span>
+      <span class="nc-pairing">Dobrý štart každého dňa od 11:00</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     8. REZERVÁCIA
+     =================================================================== -->
+<section id="rezervacia" aria-labelledby="rez-heading">
+  <div class="rez-bg" aria-hidden="true" style="background-image:linear-gradient(rgba(26,26,26,0.72),rgba(26,26,26,0.72)),url('assets/Photos/mp1b9k02-Screenshot-2026-05-11-164106.png');background-size:cover;background-position:center;"></div>
+  <div class="rez-content">
+    <h2 class="rez-headline reveal" id="rez-heading">Rezervuj<br>stôl</h2>
+    <p class="rez-sub reveal reveal-d1">
+      Zarezervuj si miesto a my ti ho ušetríme. Či už ide o posedenie
+      s kamarátmi alebo špeciálnu oslavu — správny stôl ťa čaká.
+    </p>
+    <a href="tel:+421917261425" class="btn-cream reveal reveal-d2" aria-label="Zavolajte na 0917 261 425 a rezervujte stôl">Zavolajte: 0917 261 425</a>
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     9. GALLERY STRIP
+     =================================================================== -->
+<div class="gallery-strip" aria-hidden="true">
+  <div class="gs-item">
+    <div class="gs-bg" style="background-image:url('assets/Photos/mp1b9jqs-Screenshot-2026-05-11-163751.png');background-size:cover;background-position:center;"></div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-bg" style="background-image:url('assets/Photos/mp1b9jv7-Screenshot-2026-05-11-163900.png');background-size:cover;background-position:center;"></div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-bg" style="background-image:url('assets/Photos/mp1b9jjn-Screenshot-2026-05-11-163710.png');background-size:cover;background-position:center top;"></div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-bg" style="background-image:url('assets/Photos/mp1b9jua-Screenshot-2026-05-11-163827.png');background-size:cover;background-position:center;"></div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-bg" style="background-image:url('assets/Photos/mp1b9jyh-Screenshot-2026-05-11-164021.png');background-size:cover;background-position:center;"></div>
+  </div>
+</div>
+
+
+<!-- ===================================================================
+     10. RECENZIE
+     =================================================================== -->
+<section id="recenzie" aria-labelledby="recenzie-heading">
+  <h2 class="rec-headline reveal" id="recenzie-heading">Čo hovoria<br>hostia</h2>
+
+  <div class="rec-grid">
+
+    <article class="rec-card reveal">
+      <div class="rec-stars" aria-label="5 z 5 hviezdičiek">5/5</div>
+      <p class="rec-text">„Veľmi príjemná obsluha, pohotový, ústretový. Výborne jedlo a tatársky biftek môžem len a len odporúčať. Určite sa oplatí ich navštíviť."</p>
+      <div class="rec-meta">Spokojný hosť <span class="rec-badge">Google</span></div>
+    </article>
+
+    <article class="rec-card reveal reveal-d1">
+      <div class="rec-stars" aria-label="5 z 5 hviezdičiek">5/5</div>
+      <p class="rec-text">„Bol som sa najesť aj s priateľkou, veľmi nám chutilo odporúčam. Skvelé jedlo a príjemná obsluha — prídeme určite znova."</p>
+      <div class="rec-meta">Verný zákazník <span class="rec-badge">Google</span></div>
+    </article>
+
+    <article class="rec-card reveal reveal-d2">
+      <div class="rec-stars" aria-label="5 z 5 hviezdičiek">5/5</div>
+      <p class="rec-text">„Príjemné posedenie v centre sídliska Sásová. Príjemné a čisté prostredie, veľká trampolína pre deti. Veľmi milý a ochotný personál."</p>
+      <div class="rec-meta">Rodina z BB <span class="rec-badge">Google</span></div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ===================================================================
+     11. FOOTER
+     =================================================================== -->
+<footer id="kontakt" role="contentinfo">
+  <h2 class="footer-headline">Kontaktuj<br>nás</h2>
+
+  <div class="footer-grid">
+
+    <!-- KONTAKT -->
+    <div class="footer-col">
+      <h3 class="footer-col-title">Kontakt</h3>
+      <address>
+        <p>Starohorská 4</p>
+        <p>Banská Bystrica – Sásová</p>
+        <a href="tel:+421917261425" aria-label="Zavolajte nám">0917 261 425</a>
+        <a href="https://www.instagram.com/pivaren_pikart_2022/" target="_blank" rel="noopener noreferrer">@pivaren_pikart_2022</a>
+        <a href="https://maps.app.goo.gl/CAVGLHeQe7atMLVW6" target="_blank" rel="noopener noreferrer">Google Maps ›</a>
+      </address>
+    </div>
+
+    <!-- OTVÁRACIE HODINY -->
+    <div class="footer-col">
+      <h3 class="footer-col-title">Hodiny</h3>
+      <div class="footer-hours">
+        <div class="fh-row"><span>Pondelok – Štvrtok</span><span>11:00 – 23:00</span></div>
+        <div class="fh-row"><span>Piatok – Sobota</span><span>11:00 – 24:00</span></div>
+        <div class="fh-row"><span>Nedeľa</span><span>Zatvorené</span></div>
+      </div>
+    </div>
+
+    <!-- SLEDUJTE NÁS -->
+    <div class="footer-col">
+      <h3 class="footer-col-title">Sleduj</h3>
+      <a href="https://www.instagram.com/pivaren_pikart_2022/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://maps.app.goo.gl/CAVGLHeQe7atMLVW6" target="_blank" rel="noopener noreferrer">Google Maps</a>
+      <a href="tel:+421917261425">Zavolaj nám</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Piváreň Pikart · Starohorská 4, Banská Bystrica – Sásová</p>
+    <p>Vyrobené s láskou pre Pikart</p>
+  </div>
+</footer>
+
+
+<!-- ===================================================================
+     JAVASCRIPT
+     =================================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* ---- Sticky navbar ---- */
+  var navbar = document.getElementById('navbar');
+  function handleScroll() {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+
+  /* ---- Hamburger / mobile menu ---- */
+  var hamburgerBtn = document.getElementById('hamburger-btn');
+  var mobileMenu   = document.getElementById('mobile-menu');
+  var mobileLinks  = mobileMenu.querySelectorAll('a');
+
+  function openMenu() {
+    hamburgerBtn.classList.add('open');
+    mobileMenu.classList.add('open');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    hamburgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    hamburgerBtn.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  hamburgerBtn.addEventListener('click', function () {
+    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  mobileLinks.forEach(function (link) { link.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+      closeMenu();
+      hamburgerBtn.focus();
+    }
+  });
+
+  /* ---- IntersectionObserver — scroll reveal ---- */
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('visible'); });
+  }
+
+  /* ---- Smooth anchor scroll ---- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function (e) {
+      var id = anchor.getAttribute('href');
+      if (id === '#') return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      var offset = (navbar ? navbar.offsetHeight : 0) + 16;
+      var top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
