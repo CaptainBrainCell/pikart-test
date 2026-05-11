@@ -1,11 +1,11 @@
 {
   "active": true,
   "image": "Assets/Photos/popup-event.jpg",
-  "imageAlt": "Quiz Night",
-  "title": "Quiz Night",
-  "date": "Utorok 20. mája",
-  "time": "19:00",
-  "description": "Príďte si zasúťažiť",
+  "imageAlt": "Quizzzz",
+  "title": "Quizzzz",
+  "date": "piatok 14. mája",
+  "time": "17:00",
+  "description": "Príďte si zasúťažiť s manzelkamii",
   "cta": {
     "text": "Rezervovať stôl",
     "url": "tel:+421917261425"
