@@ -843,12 +843,16 @@ footer { background: var(--pure-black); padding: 100px clamp(20px, 4vw, 60px) 40
 }
 .popup-image-wrap {
   width: 100%;
+  max-height: 55vh;
   overflow: hidden;
   background: var(--charcoal);
 }
 .popup-image-wrap img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  max-height: 55vh;
+  object-fit: cover;
+  object-position: top;
   display: block;
 }
 .popup-body {
