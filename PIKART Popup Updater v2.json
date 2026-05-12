@@ -117,7 +117,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const token    = $('Config').item.json.TELEGRAM_BOT_TOKEN;\nconst filePath = $('getFile').item.json.result.file_path;\nconst url      = `https://api.telegram.org/file/bot${token}/${filePath}`;\n\nconst buffer = await this.helpers.httpRequest({\n  method: 'GET',\n  url,\n  encoding: null\n});\n\nconst base64 = Buffer.from(buffer, 'binary').toString('base64');\nreturn [{ json: { img_base64: base64 } }];"
+        "jsCode": "const token    = $('Config').item.json.TELEGRAM_BOT_TOKEN;\nconst filePath = $('getFile').item.json.result.file_path;\nconst url      = `https://api.telegram.org/file/bot${token}/${filePath}`;\n\nconst arrayBuffer = await this.helpers.httpRequest({\n  method: 'GET',\n  url,\n  responseType: 'arraybuffer'\n});\n\nconst base64 = Buffer.from(new Uint8Array(arrayBuffer)).toString('base64');\nreturn [{ json: { img_base64: base64 } }];"
       },
       "id": "11111111-0000-0000-0000-000000000014",
       "name": "To Base64",
